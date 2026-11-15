@@ -1,10 +1,22 @@
 # The release pipeline (`scripts/release.sh`)
 
+```mermaid
+flowchart LR
+    Clean["clean tree required<br/>(--dry-run tolerates dirty)"] --> Tag["versioner computes vX.Y.Z…<br/>tag must not exist locally or on origin"]
+    Tag -->|"<a href='build.sh.md'>build.sh --all --release</a>"| Build["build.sh --all --release<br/>(--skip-build reuses dist/)"]
+    Build --> Pack["mirror-clone_VERSION_PLATFORM.zip × 6<br/>binary + LICENSE + README.md"]
+    Pack --> Sum["checksums.txt — SHA256, sha256sum format"]
+    Sum --> GH["annotated tag → push<br/>gh release create --verify-tag --generate-notes"]
+    GH --> Tools["zip, else the vendored 7zz<br/>(7zz a -tzip)"]
+    click Tag href "version.sh.md"
+    click Pack href "../release.go.md"
+```
+
 `scripts/release.sh` builds, packages, tags and publishes a release. The client the tool itself uses to read that release back is [release.go](../release.go.md); this page covers the pipeline that produces it.
 
 ## The release pipeline
 
-Computes the version and tag with the pinned [versioner](../tools/versioner/update.sh.md) (via [version.sh.md](version.sh.md) and [entry.sh.md](entry.sh.md)), cross compiles every platform with [build.sh](build.sh.md), and packages one archive per platform.
+Computes the version and tag with the pinned `tools/versioner/update.sh.md` (via [version.sh.md](version.sh.md) and [entry.sh.md](entry.sh.md)), cross compiles every platform with [build.sh](build.sh.md), and packages one archive per platform.
 
 1. Requires a clean working tree (a dirty tree is only tolerated in `--dry-run`), `git`, `gh` authenticated, and a successful `git fetch origin --tags`.
 2. The tag must match `vX.Y.Z...` and must not exist locally or on origin.
@@ -21,5 +33,5 @@ Computes the version and tag with the pinned [versioner](../tools/versioner/upda
 - [../update.go.md](../update.go.md) — the self update that consumes the release feed
 - [build.sh.md](build.sh.md) — the cross compiler
 - [version.sh.md](version.sh.md) · [env.sh.md](env.sh.md)
-- [../tools/versioner/update.sh.md](../tools/versioner/update.sh.md)
+- `tools/versioner/update.sh.md`
 - [../README.md](../README.md) — the releasing section

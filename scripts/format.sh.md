@@ -1,5 +1,18 @@
 # Formatting (`scripts/format.sh`)
 
+```mermaid
+flowchart LR
+    Args["format.sh [--check · --dry-run · --tool TOOL · --parallel]"] --> Uv["uv run --project … formattington"]
+    Cfg[".formattington.json<br/>the formatter table"] --> Uv
+    Uv --> P["prettier — Markdown, JSON"]
+    Uv --> S["shfmt -i 4 — shell"]
+    Uv --> T["taplo — TOML"]
+    Uv --> G["gofmt + goimports — Go<br/>serial by default (they race otherwise)"]
+    Uv --> Chk{"--check?"}
+    Chk -->|"yes"| Fail["exit 1 when anything needs formatting"]
+    Chk -->|"no"| Write["format in place · exit 0"]
+```
+
 `scripts/format.sh` formats the sources of the repository with [formattington](https://github.com/fordaj/formattington), driven by the configuration in `.formattington.json`: `prettier` (Markdown, JSON), `shfmt -i 4` (shell), `taplo` (TOML), `gofmt` and `goimports` (Go).
 
 ## Usage

@@ -1,5 +1,16 @@
 # Logging (`logger.go`)
 
+```mermaid
+flowchart LR
+    Argv["--log-level · -q/--quiet"] --> Parse["ParseLevel<br/>error · warn · info · debug<br/>unknown → LevelInfo"]
+    Parse --> Min["min level"]
+    Min --> Logger["Logger — NewLogger(out, err, min)"]
+    Logger --> Out["Infof / Debugf → stdout<br/>(prefixed)"]
+    Logger --> Err["Warnf / Errorf → stderr<br/>(prefixed)"]
+    Logger --> Drop["below min → discarded"]
+    click Argv href "cli.go.md"
+```
+
 `logger.go` defines the severity levels and the small `Logger` the whole tool uses. It is the Go-side counterpart of the shell `log()` in [scripts/entry.sh.md](scripts/entry.sh.md).
 
 ## Levels

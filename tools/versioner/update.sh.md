@@ -1,5 +1,18 @@
 # The versioner bundle (`tools/versioner/`)
 
+```mermaid
+flowchart TD
+    Args["update.sh [--dry-run · --tag TAG]"] --> Tag["resolve tag<br/>latest release or --tag · validated"]
+    Tag --> DL["gh release download<br/>ASSET_&lt;os&gt;-&lt;arch&gt;.7z + checksums.txt"]
+    Args --> Need["needs 7z/7zz — the vendored<br/>tools/7zip bundle works"]
+    DL --> Sum["verify checksums.txt<br/>mismatch → fatal · absent → warn"]
+    Sum --> Map["stem → platform<br/>no windows-arm64 build ships upstream"]
+    Map --> Ext["7z extract → vTAG/PLATFORM"]
+    Ext --> Swap["swap: mv staging → vTAG<br/>then delete superseded v* folders"]
+    Swap --> Smoke["smoke: versioner --version"]
+    click Need href "../7zip/update.sh.md"
+```
+
 [Versioner](https://github.com/fordaj/Versioner) computes the repository version (the tag) from the git history and `.versioner.json` — the same computation the builds and the release use, so a local build and the published tag can never drift apart. It is consumed by [scripts/version.sh](../../scripts/version.sh.md), [build.sh](../../scripts/build.sh.md) and [release.sh](../../scripts/release.sh.md).
 
 ## Layout

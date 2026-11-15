@@ -1,5 +1,23 @@
 # URL handling (`url.go`)
 
+```mermaid
+flowchart LR
+    HTTPS["https://host/org/repo.git"]
+    SCP["git@host:org/repo.git"]
+    Local["/srv/git/repo.git"]
+    HTTPS --> Name["repoNameFromURL<br/>last segment · drop .git/.bundle"]
+    SCP --> Name
+    Local --> Name
+    Name --> San["sanitizeName<br/>[a-zA-Z0-9._-] only · else repo"]
+    Name --> Hash["shortHash — name disambiguation"]
+    Rel["../lib.git"] --> Res["resolveSubmoduleURL<br/>relative resolved against superproject"]
+    Base["https://host/org/proj.git"] --> Res
+    Res --> Out["https://host/org/lib.git"]
+    click San href "mirror.go.md"
+    click Hash href "mirror.go.md"
+    click Res href "mirror.go.md"
+```
+
 `url.go` derives repository names and resolves submodule URLs. It understands the three URL shapes that show up in practice: `https://host/org/repo.git`, scp-like `git@host:org/repo.git`, and local paths like `/srv/git/repo.git`.
 
 ## Functions

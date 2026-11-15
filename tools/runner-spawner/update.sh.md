@@ -1,5 +1,17 @@
 # The runner-spawner bundle (`tools/runner-spawner/`)
 
+```mermaid
+flowchart TD
+    Args["update.sh [--dry-run · --tag TAG]"] --> Tag["resolve tag<br/>latest release or --tag · validated"]
+    Tag --> DL["gh release download<br/>platform-native tar.gz / zip (.7z legacy)"]
+    DL --> Sum["verify SHA256 vs checksums.txt<br/>REFUSES to install unverified binaries"]
+    Sum --> Map["stem → platform<br/>darwin·macos · x64·amd64·x86_64 · optional -lite/-full stripped"]
+    Map --> Ext["tar / unzip / 7zz → vTAG/PLATFORM<br/>binary at root or one level deep"]
+    Ext --> Swap["swap: mv staging → vTAG<br/>then delete superseded v* folders"]
+    Swap --> Smoke["smoke: runner-spawner --version"]
+    click Ext href "../barnacle/update.sh.md"
+```
+
 [runner-spawner](https://github.com/fordaj/runner-spawner) manages self-hosted CI runners. No script in this repository invokes it; it is pinned and resolved like the other bundles so the tooling is there when CI work needs it, and so the bundle layout stays uniform. It reports unsupported on Linux (macOS + Windows only; the Linux binaries are still shipped), and `windows-arm64`/`windows-x86_64` are bundled.
 
 **The bundle was updated to runner-spawner v0.0.1.2.6** (see the git history: "Update runner-spawner to latest version" and "Bump runner-spawner pin to v0.0.1.2.6"). `scripts/.common.env` pins `RUNNER_SPAWNER_VERSION_DIR=tools/runner-spawner/v0.0.1.2.6`; [scripts/env.sh.md](../../scripts/env.sh.md) prefers any newer `v*` directory that shows up in the bundle.

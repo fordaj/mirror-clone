@@ -1,5 +1,16 @@
 # Command line parsing (`cli.go`)
 
+```mermaid
+flowchart LR
+    Argv["os.Args[1:]"] --> Parse["parseArgs"]
+    Parse -->|"ok"| Opts["Options<br/>Command · Repository · Directory<br/>Branch · Jobs · LogLevel"]
+    Parse -->|"error"| Err["usage error · exit 2"]
+    Opts --> Run["run — apply flags, dispatch"]
+    Opts -.-> Usage["usageText — the help surface"]
+    click Run href "main.go.md"
+    click Usage href "main.go.md"
+```
+
 `cli.go` defines the command line surface of the tool: the `Options` struct, the self management `Command` constants, the `usageText` help text, and `parseArgs`.
 
 ## Commands

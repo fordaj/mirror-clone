@@ -1,5 +1,19 @@
 # Removing the executable (`executable_unix.go` + `executable_windows.go`)
 
+```mermaid
+flowchart TD
+    Uninst["mirror-clone uninstall"] --> Rem["removeExecutable(path)"]
+    Rem -->|"!windows build tag"| Unix["os.Remove — unlink a running binary is fine"]
+    Rem -->|"windows build tag"| Win["os.Remove"]
+    Win -->|"ERROR_SHARING_VIOLATION · ERROR_LOCK_VIOLATION"| Old["rename to path.old<br/>delete by hand after exit"]
+    Win -->|"any other error"| Fail["return the error unchanged"]
+    Unix --> Done["removed"]
+    Old --> Done
+    click Uninst href "install.go.md"
+    click Old href "update.go.md"
+    click Fail href "install.go.md"
+```
+
 `removeExecutable(path)` deletes the installed executable. It is the one piece of the self-management flow that differs between platforms, so it lives in two files selected by build tag.
 
 ## `executable_unix.go` (`//go:build !windows`)

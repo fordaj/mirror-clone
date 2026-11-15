@@ -1,5 +1,16 @@
 # The git runner (`git.go`)
 
+```mermaid
+flowchart LR
+    Caller["MirrorCloner"] --> Run["Git.Run / Git.RunIn"]
+    Run --> Env["non-interactive env<br/>GIT_TERMINAL_PROMPT=0<br/>GIT_PAGER=cat · GIT_OPTIONAL_LOCKS=0"]
+    Env --> Git["git -C DIR ARGS…<br/>(cwd never changes)"]
+    Git --> Result{"exit code"}
+    Result -->|"0"| Out["trimmed stdout"]
+    Result -->|"non-zero"| Err["*GitError<br/>Args · Output · Err"]
+    click Caller href "mirror.go.md"
+```
+
 `git.go` wraps every `git` invocation of the tool. Nothing in the repository shells out to git directly; everything goes through `Git`.
 
 ## `GitError`

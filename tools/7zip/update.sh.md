@@ -1,5 +1,15 @@
 # The 7-Zip bundle (`tools/7zip/`)
 
+```mermaid
+flowchart TD
+    Args["update.sh [--dry-run · --tag TAG]"] --> Tag["resolve tag<br/>latest release or --tag · numeric dot-separated shape"]
+    Tag --> DL["gh release download<br/>7zNNNN-*.tar.xz · 7zNNNN-mac.tar.xz · 7zr.exe"]
+    DL --> Digest["verify SHA256 against the<br/>per-asset digest GitHub publishes<br/>asset without a digest → fatal"]
+    Digest --> Ext["extract (tar -xJf) → vTAG/PLATFORM<br/>full upstream payload kept"]
+    Ext --> Swap["swap: mv staging → vTAG<br/>then delete superseded v* folders"]
+    Swap --> Smoke["smoke: banner check — warn only"]
+```
+
 [7-Zip](https://www.7-zip.org/) is a free file archiver. mirror-clone vendors the upstream console builds so the release pipeline can create `zip` archives without a system `zip`, and so the legacy `.7z` tool updaters have a `7z`/`7zz` on hand. The upstream release is mirrored as a GitHub release at [ip7z/7zip](https://github.com/ip7z/7zip), which is what `update.sh` downloads from.
 
 ## Layout

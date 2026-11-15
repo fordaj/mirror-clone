@@ -1,5 +1,19 @@
 # Self install and uninstall (`install.go`)
 
+```mermaid
+flowchart TD
+    Inst["mirror-clone install"] --> Dir["installDir<br/>~/.local/bin · %LOCALAPPDATA%\Programs\mirror-clone"]
+    Dir --> Copy["copyExecutable<br/>temp file in the target dir · chmod 0755"]
+    Copy --> Replace["replaceFile — atomic rename<br/>Windows: locked target moved aside to .old first"]
+    Replace --> Path{"on PATH?"}
+    Path -->|"no"| Print["print the line to add<br/>shell config never changed"]
+    Path -->|"yes"| Done["installed"]
+    Un["mirror-clone uninstall"] --> Rem["removeExecutable + leftover .old"]
+    Rem --> Rmdir["removeDirIfEmpty — only when empty"]
+    click Replace href "update.go.md"
+    click Rem href "executable.md"
+```
+
 `install.go` implements `mirror-clone install` and `mirror-clone uninstall`: copying the running executable into a per-user directory and removing it again.
 
 ## Install location

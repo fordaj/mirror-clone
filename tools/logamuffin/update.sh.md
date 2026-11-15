@@ -1,5 +1,18 @@
 # The logamuffin bundle (`tools/logamuffin/`)
 
+```mermaid
+flowchart TD
+    Args["update.sh [--dry-run · --tag TAG]"] --> Tag["resolve tag<br/>latest release or --tag · validated"]
+    Tag --> DL["gh release download<br/>ASSET_&lt;os&gt;-&lt;arch&gt;.7z + checksums.txt"]
+    Args --> Need["needs 7z/7zz — the vendored<br/>tools/7zip bundle works"]
+    DL --> Sum["verify checksums.txt<br/>mismatch → fatal · absent → warn"]
+    Sum --> Map["stem → platform<br/>macos/linux/windows × x86_64/arm64"]
+    Map --> Ext["7z extract → vTAG/PLATFORM"]
+    Ext --> Swap["swap: mv staging → vTAG<br/>then delete superseded v* folders"]
+    Swap --> Smoke["smoke: logamuffin --version"]
+    click Need href "../7zip/update.sh.md"
+```
+
 [logamuffin](https://github.com/fordaj/logamuffin) is the structured logging backend used by the repository's scripts: [scripts/entry.sh](../../scripts/entry.sh.md) forwards `log LEVEL MESSAGE...` to `LOGAMUFFIN_BIN`, passing the call site in `LOG_SOURCE`.
 
 ## Layout

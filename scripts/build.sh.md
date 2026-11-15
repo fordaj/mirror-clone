@@ -1,5 +1,17 @@
 # Cross compilation (`scripts/build.sh`)
 
+```mermaid
+flowchart LR
+    Args["--all · --platform PLATFORM (repeatable)<br/>default: host · DEBUG=true / --debug<br/>OUTPUT_DIR · PLATFORMS"] --> Map["go_target<br/>linux · macos · windows<br/>× x86_64 · arm64 · CGO_ENABLED=0"]
+    Args --> Host["detect_host_platform"]
+    Host --> Map
+    Map --> Ld["-ldflags -X main.version=… commit=…<br/>date=… mode=…<br/>(+ -s -w -trimpath for release)"]
+    Ver["version.sh.md<br/>pinned versioner"] --> Ld
+    Ld --> Out["dist/…/mirror-clone[.exe]<br/>debug builds under dist/debug/…"]
+    click Ver href "version.sh.md"
+    click Out href "run.sh.md"
+```
+
 `scripts/build.sh` cross compiles the mirror-clone binary for the supported platforms. Release builds are the default (stripped, optimized, version stamped); debug builds keep the compiler's symbols and debug information.
 
 ## Usage
@@ -17,7 +29,7 @@ The six supported platforms are `linux-x86_64`, `linux-arm64`, `macos-x86_64`, `
 
 ## Version stamping
 
-When the bundled [versioner](../tools/versioner/update.sh.md) is available, the version comes from [scripts/version.sh](version.sh.md); otherwise the build warns and stamps `dev`. The commit and the build date come from git (`rev-parse --short HEAD`, `show -s --format=%cI`). Everything is stamped with `-ldflags "-X main.version=... -X main.commit=... -X main.date=... -X main.mode=..."` (see [version.sh.md](../version.go.md)); release mode adds `-s -w` and `-trimpath`, debug mode uses `-gcflags "all=-N -l"`. `CGO_ENABLED=0` for every build.
+When the bundled `tools/versioner/update.sh.md` is available, the version comes from [scripts/version.sh](version.sh.md); otherwise the build warns and stamps `dev`. The commit and the build date come from git (`rev-parse --short HEAD`, `show -s --format=%cI`). Everything is stamped with `-ldflags "-X main.version=... -X main.commit=... -X main.date=... -X main.mode=..."` (see [version.sh.md](../version.go.md)); release mode adds `-s -w` and `-trimpath`, debug mode uses `-gcflags "all=-N -l"`. `CGO_ENABLED=0` for every build.
 
 Sources [scripts/entry.sh.md](entry.sh.md) for the environment cascade and `log()`. Requires `go` and `git` on `PATH`.
 

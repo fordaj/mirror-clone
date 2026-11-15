@@ -1,5 +1,24 @@
 # Self update (`update.go`)
 
+```mermaid
+flowchart TD
+    Run["runUpdate"] --> Chk{"installed?"}
+    Chk -->|"<a href='install.go.md'>no — not installed</a>"| NotInst["tell the user to run<br/>mirror-clone install"]
+    Chk -->|"yes"| Latest["latestRelease<br/>newest non-draft, non-prerelease"]
+    Latest --> Cmp{"compareVersions(available, installed)"}
+    Cmp -->|"0"| UTD["up to date · return"]
+    Cmp -->|"installed newer"| Warn["warn — never downgrade · return"]
+    Cmp -->|"available newer"| Pick["platformName · selectArchive<br/>selectChecksums"]
+    Pick --> DL["download archive + checksums.txt<br/>into a temp dir inside the install dir"]
+    DL --> Verify["verifyChecksum — SHA256, sha256sum format"]
+    Verify --> Ext["extractExecutable → mode 0755"]
+    Ext --> Repl["replaceFile — atomic, from install.go"]
+    Repl --> Done["updated"]
+    click Latest href "release.go.md"
+    click Cmp href "version.go.md"
+    click Repl href "install.go.md"
+```
+
 `update.go` implements `mirror-clone update`: replace the installed executable with the latest stable release of [fordaj/MirrorClone](https://github.com/fordaj/MirrorClone).
 
 ## The `updater`

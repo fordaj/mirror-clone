@@ -1,5 +1,16 @@
 # The barnacle bundle (`tools/barnacle/`)
 
+```mermaid
+flowchart TD
+    Args["update.sh [--dry-run · --tag TAG · --repo REPO]"] --> Tag["resolve tag<br/>latest release or --tag · validated vX.Y.Z…"]
+    Tag --> DL["gh release download<br/>barnacle-PLATFORM.tar.gz / .zip + checksums.txt"]
+    DL --> Sum["verify SHA256 of the downloaded archives<br/>missing entry for a downloaded asset → fatal"]
+    Sum --> Ext["extract → STAGE_DIR/PLATFORM<br/>binary at archive root or one level deep"]
+    Ext --> Lic["LICENSE at root or one level deep<br/>→ copied per platform"]
+    Lic --> Swap["swap: mv staging → vTAG<br/>then delete superseded v* folders"]
+    Swap --> Smoke["smoke: barnacle --version<br/>warn only on mismatch"]
+```
+
 [Barnacle](https://github.com/fordaj/barnacle) is a documentation-site generator: it renders the `.md` and `.mmd` files scattered through a repository into a static, navigable HTML site. mirror-clone uses it to render *this* documentation; the site you may be reading was built by it.
 
 ## Layout

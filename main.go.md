@@ -1,5 +1,20 @@
 # Entry point (`main.go`)
 
+```mermaid
+flowchart TD
+    Start["run(args)"] --> Parse["parseArgs"]
+    Parse -->|"error"| E2["usage error + hint<br/>exit 2"]
+    Parse -->|"--help"| H["usageText<br/>exit 0"]
+    Parse -->|"--version"| V["versionString<br/>exit 0"]
+    Parse --> Build["logger + signal-aware context"]
+    Build --> Dispatch{"command"}
+    Dispatch -->|"<a href='install.go.md'>install / uninstall</a>"| Inst["install / uninstall"]
+    Dispatch -->|"<a href='update.go.md'>update</a>"| Upd["update"]
+    Dispatch -->|"<a href='mirror.go.md'>(default) clone</a>"| Clone["MirrorCloner"]
+    Clone --> Exit["exit 0 · 1 · 130"]
+    click Parse href "cli.go.md"
+```
+
 `main.go` is the program entry point. It keeps `main()` trivial and puts the whole program logic in `run(args []string) int`, which returns the process exit code; `main` only does `os.Exit(run(os.Args[1:]))`.
 
 ## What `run` does

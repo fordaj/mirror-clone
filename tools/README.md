@@ -1,5 +1,19 @@
 # Pinned helper tools (`tools/`)
 
+```mermaid
+flowchart LR
+    Index["tools/ — pinned helper bundles"] --> Barnacle["barnacle<br/>renders this documentation site"]
+    Index --> Versioner["versioner<br/>computes the repository version"]
+    Index --> Loga["logamuffin<br/>log() backend for the scripts"]
+    Index --> RS["runner-spawner<br/>self-hosted CI runners"]
+    Index --> Z["7zip<br/>archive creation fallback"]
+    click Barnacle href "barnacle/update.sh.md"
+    click Versioner href "versioner/update.sh.md"
+    click Loga href "logamuffin/update.sh.md"
+    click RS href "runner-spawner/update.sh.md"
+    click Z href "7zip/update.sh.md"
+```
+
 `tools/` carries the repository's pinned helper binaries — build, release, logging, docs and archiving tooling — plus one `update.sh` per tool that refreshes them. They are not dependencies of the mirror-clone binary itself; they are the tools used to build, test, log and document this repository.
 
 ## Bundling convention

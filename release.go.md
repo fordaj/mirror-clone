@@ -1,5 +1,18 @@
 # The GitHub releases client (`release.go`)
 
+```mermaid
+flowchart LR
+    Upd["self update"] --> Client["releaseClient<br/>30 s timeout"]
+    Client --> API["GET api.github.com/repos/fordaj/MirrorClone/releases"]
+    API --> Latest["latestRelease<br/>selectLatestRelease: skip drafts and prereleases"]
+    Latest --> Plat["platformName<br/>linux · macos · windows × x86_64 · arm64"]
+    Plat --> Sel["selectArchive + selectChecksums<br/>exact name, else platform fallback"]
+    Sel --> DL["download for the configured platform"]
+    click Upd href "update.go.md"
+    click Latest href "version.go.md"
+    click DL href "update.go.md"
+```
+
 `release.go` is the small client the self update uses to find the latest stable release of [fordaj/MirrorClone](https://github.com/fordaj/MirrorClone) on the GitHub API and to pick the archive to install. `scripts/release.sh` publishes the releases this client reads; see [scripts/release.sh.md](scripts/release.sh.md).
 
 ## The client

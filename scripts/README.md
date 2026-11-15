@@ -1,5 +1,26 @@
 # Repository script tooling (`scripts/`)
 
+```mermaid
+flowchart LR
+    Env["env.sh.md<br/>environment cascade<br/>dotfile cascade loader"] --> Entry["entry.sh.md<br/>sources the cascade + defines log()"]
+    Entry --> Build["build.sh.md"]
+    Entry --> Release["release.sh.md"]
+    Entry --> Test["test.sh.md"]
+    Entry --> Docs["docs.sh.md"]
+    Entry --> Run["run.sh.md"]
+    Entry --> Format["format.sh.md"]
+    Entry --> Version["version.sh.md"]
+    click Env href "env.sh.md"
+    click Entry href "entry.sh.md"
+    click Build href "build.sh.md"
+    click Release href "release.sh.md"
+    click Test href "test.sh.md"
+    click Docs href "docs.sh.md"
+    click Run href "run.sh.md"
+    click Format href "format.sh.md"
+    click Version href "version.sh.md"
+```
+
 The `scripts/` directory carries the repository's build/release/docs tooling: an environment cascade the other scripts source, plus one entry point per task. Everything here is bash; nothing requires a global install beyond what each script documents.
 
 Vernacular used in the headers (`log INFO`, `$REPO_ROOT_DIR`, `VERSIONER_BIN`): read [entry.sh.md](entry.sh.md) first, then [env.sh.md](env.sh.md).
@@ -22,6 +43,6 @@ Vernacular used in the headers (`log INFO`, `$REPO_ROOT_DIR`, `VERSIONER_BIN`): 
 
 ## Related pages
 
-- [tools/ — pinned helper binaries](../tools/README.md)
+- `tools/README.md` — the pinned helper binaries
 - [README.md](../README.md)
 - [AGENTS.md](../AGENTS.md)

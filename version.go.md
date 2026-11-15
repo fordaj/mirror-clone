@@ -1,5 +1,17 @@
 # Version handling (`version.go`)
 
+```mermaid
+flowchart LR
+    LD["build-time -ldflags<br/>version · commit · date · mode"] --> Ver["package-level vars<br/>version=dev · commit=none · …"]
+    Ver --> Fmt["versionString()<br/>for --version"]
+    Ver --> Cmp["compareVersions(a, b)<br/>-1 older · 0 equal · 1 newer<br/>leading v ignored · numeric parts"]
+    Cmp --> Rel["releaseVersion<br/>tag without the leading v"]
+    Cmp --> Upd["update — is newer available?"]
+    Cmp --> Sel["release selection"]
+    click Upd href "update.go.md"
+    click Sel href "release.go.md"
+```
+
 `version.go` holds the build-time version of the binary and the version comparison used by the self update.
 
 ## Build information

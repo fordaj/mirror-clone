@@ -1,6 +1,19 @@
 # The version script (`scripts/version.sh`)
 
-Prints the version of this repository as computed by the pinned [versioner](../tools/versioner/update.sh.md) — the same computation the release pipeline uses, so a local build and the published tag can never drift apart.
+```mermaid
+flowchart LR
+    Args["version.sh [--format text|shell|json]"] --> Bin["VERSIONER_BIN<br/>cascade-resolved · fallback on PATH"]
+    Bin --> Run["versioner --repo-dir ROOT --quiet<br/>version from git history + .versioner.json"]
+    Run --> Out{"--format"}
+    Out -->|"text"| T["VERSION= / TAG= lines<br/>(default)"]
+    Out -->|"shell"| Sh["export VERSION=… TAG=…<br/>for eval"]
+    Out -->|"json"| J["raw versioner JSON"]
+    T --> Consumers["build.sh · release.sh"]
+    click Bin href "env.sh.md"
+    click Consumers href "release.sh.md"
+```
+
+Prints the version of this repository as computed by the pinned `tools/versioner/update.sh.md` — the same computation the release pipeline uses, so a local build and the published tag can never drift apart.
 
 ## Usage
 
@@ -26,4 +39,4 @@ Sources [entry.sh.md](entry.sh.md) for the cascade and `log()`. If `VERSIONER_BI
 
 - [entry.sh.md](entry.sh.md) · [env.sh.md](env.sh.md)
 - [build.sh.md](build.sh.md) · [release.sh.md](release.sh.md)
-- [../tools/versioner/update.sh.md](../tools/versioner/update.sh.md)
+- `tools/versioner/update.sh.md`

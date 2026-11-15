@@ -1,5 +1,18 @@
 # The mirror cloner (`mirror.go`)
 
+```mermaid
+flowchart TD
+    Req["CloneRequest<br/>Name · URL · Dest · Ref"] --> Val["validate URL + dest"]
+    Val --> Ensure["ensureMirror<br/>git clone --mirror · or fetch --prune<br/>cache: &lt;cache&gt;/&lt;name&gt;.git<br/>name clash → &lt;name&gt;-&lt;shorthash&gt;.git"]
+    Ensure --> From["cloneFromMirror<br/>git clone --reference --dissociate<br/>existing dest: fetch --prune + ff-only<br/>(never discards local changes)"]
+    From --> Checkout["checkout Ref<br/>fallback: fetch mirror refs → refs/remotes/mirror/* and retry"]
+    Checkout -->|"<a href='url.go.md'>relative URLs vs superproject</a>"| Subs["cloneSubmodules<br/>parallel, recursive, bounded by --jobs"]
+    Subs --> Done["working copy ready"]
+    click Ensure href "git.go.md"
+    click From href "git.go.md"
+    click Checkout href "git.go.md"
+```
+
 `mirror.go` implements the core of the tool: cloning through a local mirror cache, including recursive submodule cloning.
 
 ## Types
