@@ -17,3 +17,6 @@ coverage.out
 __pycache__/
 *.pyc
 .pytest_cache/
+
+# Git worktrees
+.worktrees/
