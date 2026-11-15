@@ -2,7 +2,7 @@
 
 [runner-spawner](https://github.com/fordaj/runner-spawner) manages self-hosted CI runners. No script in this repository invokes it; it is pinned and resolved like the other bundles so the tooling is there when CI work needs it, and so the bundle layout stays uniform. It reports unsupported on Linux (macOS + Windows only; the Linux binaries are still shipped), and `windows-arm64`/`windows-x86_64` are bundled.
 
-**The bundle was updated to runner-spawner v0.0.1.2.6** (see the git history: "Update runner-spawner to latest version" and "Bump runner-spawner pin to v0.0.1.2.6"). `scripts/.common.env` pins `RUNNER_SPAWNER_VERSION_DIR=tools/runner-spawner/v0.0.1.2.6`; [scripts/env.md](../../scripts/env.md) prefers any newer `v*` directory that shows up in the bundle.
+**The bundle was updated to runner-spawner v0.0.1.2.6** (see the git history: "Update runner-spawner to latest version" and "Bump runner-spawner pin to v0.0.1.2.6"). `scripts/.common.env` pins `RUNNER_SPAWNER_VERSION_DIR=tools/runner-spawner/v0.0.1.2.6`; [scripts/env.sh.md](../../scripts/env.sh.md) prefers any newer `v*` directory that shows up in the bundle.
 
 ## Layout
 
@@ -28,10 +28,10 @@ The platform-native archive family (like barnacle, unlike versioner/logamuffin):
 4. Swaps in the new version directory and deletes superseded `v*` folders only after the new one is fully staged — a failed download leaves the previous bundle intact.
 5. Smoke-tests the host binary (`runner-spawner --version`); a version mismatch only warns.
 
-Environment overrides: `RUNNER_SPAWNER_TOOL_REPO`, `RUNNER_SPAWNER_TAG`. `--dry-run` lists assets and planned removals without touching anything; `--help` shows usage. Prerequisites: `gh` and `tar` (plus `unzip`, or `7z`/`7zz` for legacy `.7z` assets). `update.sh` resolves its own directory, sources [scripts/entry.sh](../../scripts/entry.md) and can run from anywhere.
+Environment overrides: `RUNNER_SPAWNER_TOOL_REPO`, `RUNNER_SPAWNER_TAG`. `--dry-run` lists assets and planned removals without touching anything; `--help` shows usage. Prerequisites: `gh` and `tar` (plus `unzip`, or `7z`/`7zz` for legacy `.7z` assets). `update.sh` resolves its own directory, sources [scripts/entry.sh](../../scripts/entry.sh.md) and can run from anywhere.
 
 ## Related pages
 
 - [../README.md](../README.md) — the bundle index
-- [../../scripts/env.md](../../scripts/env.md) — how `RUNNER_SPAWNER_BIN` is resolved
-- [../barnacle/update.md](../barnacle/update.md) — the other native-archive bundle
+- [../../scripts/env.sh.md](../../scripts/env.sh.md) — how `RUNNER_SPAWNER_BIN` is resolved
+- [../barnacle/update.sh.md](../barnacle/update.sh.md) — the other native-archive bundle

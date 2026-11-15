@@ -1,6 +1,6 @@
 # Running the built binary (`scripts/run.sh`)
 
-`scripts/run.sh` runs the mirror-clone binary that was built for the current machine. The platform is resolved with the environment cascade ([scripts/env.md](env.md)), the same way the bundled tools are resolved, and every argument is passed straight to the binary.
+`scripts/run.sh` runs the mirror-clone binary that was built for the current machine. The platform is resolved with the environment cascade ([scripts/env.sh.md](env.sh.md)), the same way the bundled tools are resolved, and every argument is passed straight to the binary.
 
 ```bash
 ./scripts/run.sh --branch main git@github.com:fordaj/AirFrame.git
@@ -17,10 +17,10 @@ DEBUG=true ./scripts/run.sh --help        # runs the debug build
 
 The lookup log line goes to **stderr**, so the output of the binary itself stays untouched, and the binary is `exec`'d directly — signals and the exit code are those of the binary.
 
-Prerequisites: a build (see [scripts/build.md](build.md)) and the environment cascade ([scripts/env.md](env.md)).
+Prerequisites: a build (see [scripts/build.sh.md](build.sh.md)) and the environment cascade ([scripts/env.sh.md](env.sh.md)).
 
 ## Related pages
 
-- [scripts/build.md](build.md) — how the binary is produced
-- [scripts/env.md](env.md) — where `PROJECT_PLATFORM` comes from
+- [scripts/build.sh.md](build.sh.md) — how the binary is produced
+- [scripts/env.sh.md](env.sh.md) — where `PROJECT_PLATFORM` comes from
 - [README.md](../README.md) — the running section

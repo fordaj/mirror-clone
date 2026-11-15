@@ -1,6 +1,6 @@
 # The versioner bundle (`tools/versioner/`)
 
-[Versioner](https://github.com/fordaj/Versioner) computes the repository version (the tag) from the git history and `.versioner.json` — the same computation the builds and the release use, so a local build and the published tag can never drift apart. It is consumed by [scripts/version.sh](../../scripts/version.md), [build.sh](../../scripts/build.md) and [release.sh](../../scripts/release.md).
+[Versioner](https://github.com/fordaj/Versioner) computes the repository version (the tag) from the git history and `.versioner.json` — the same computation the builds and the release use, so a local build and the published tag can never drift apart. It is consumed by [scripts/version.sh](../../scripts/version.sh.md), [build.sh](../../scripts/build.sh.md) and [release.sh](../../scripts/release.sh.md).
 
 ## Layout
 
@@ -15,7 +15,7 @@ tools/versioner/
     windows-x86_64/versioner.exe
 ```
 
-There is no `windows-arm64` build (upstream ships windows-amd64 only); on windows-arm64 the cascade falls back to `versioner` on `PATH` (see [../../scripts/env.md](../../scripts/env.md)).
+There is no `windows-arm64` build (upstream ships windows-amd64 only); on windows-arm64 the cascade falls back to `versioner` on `PATH` (see [../../scripts/env.sh.md](../../scripts/env.sh.md)).
 
 ## `update.sh` in detail
 
@@ -27,10 +27,10 @@ The `.7z` bundle family: assets are `*_<os>-<arch>.7z` archives plus `checksums.
 4. Swaps in the new version directory and deletes superseded `v*` folders only after the new one is fully staged — a failed download leaves the previous bundle intact.
 5. Smoke-tests the host binary (`versioner --version`); a version that does not contain the tag only warns.
 
-Environment overrides: `VERSIONER_REPO`, `VERSIONER_TAG`. `--dry-run` lists assets and planned removals without touching anything; `--help` shows usage. Prerequisites: `gh`, and `7z`/`7zz` for the real update. `update.sh` sources [scripts/entry.sh](../../scripts/entry.md) and can run from anywhere.
+Environment overrides: `VERSIONER_REPO`, `VERSIONER_TAG`. `--dry-run` lists assets and planned removals without touching anything; `--help` shows usage. Prerequisites: `gh`, and `7z`/`7zz` for the real update. `update.sh` sources [scripts/entry.sh](../../scripts/entry.sh.md) and can run from anywhere.
 
 ## Related pages
 
 - [../README.md](../README.md) — the bundle index
-- [../../scripts/version.md](../../scripts/version.md) — the consumer of the binary
-- [../../build.md](../../scripts/build.md) · [../../release.md](../../scripts/release.md)
+- [../../scripts/version.sh.md](../../scripts/version.sh.md) — the consumer of the binary
+- [../../build.sh.md](../../scripts/build.sh.md) · [../../release.sh.md](../../scripts/release.sh.md)

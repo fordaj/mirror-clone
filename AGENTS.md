@@ -58,20 +58,20 @@ The repository's documentation is a set of Markdown (`.md`) and Mermaid (`.mmd`)
 
 Layout — documentation lives next to the code it describes:
 
-- One sibling `.md` per root Go file (`cli.go` → [cli.md](cli.md)), plus `main.md` for the entry point. Two deliberate exceptions: one `executable.md` page covers both `executable_unix.go` and `executable_windows.go` (the build-tag pair shares one contract), and one `scripts/release.md` page covers both `release.go` and `scripts/release.sh` (the stem is taken by both).
-- One sibling `.md` per task script that used to live at the root (`scripts/build.sh` → [scripts/build.md](scripts/build.md), `scripts/format.sh` → [scripts/format.md](scripts/format.md), `scripts/release.sh` → [scripts/release.md](scripts/release.md), `scripts/run.sh` → [scripts/run.md](scripts/run.md), `scripts/test.sh` → [scripts/test.md](scripts/test.md)).
-- One sibling `.md` per script in `scripts/` (`entry.sh` → [entry.md](scripts/entry.md), `env.sh` → [env.md](scripts/env.md), `version.sh` → [version.md](scripts/version.md), `docs.sh` → [docs.md](scripts/docs.md)), plus `scripts/README.md` as the hub.
-- One sibling `.md` per bundle in `tools/` (`tools/<name>/update.md`), plus `tools/README.md` as the hub. The 7zip bundle is documented by `tools/7zip/update.md` like the others.
+- One sibling `.md` per root Go file (`cli.go` → [cli.go.md](cli.go.md)), plus `main.go.md` for the entry point. Two deliberate exceptions: one `executable.md` page covers both `executable_unix.go` and `executable_windows.go` (the build-tag pair shares one contract), and one `scripts/release.sh.md` page covers both `release.go` and `scripts/release.sh` (the stem is taken by both).
+- One sibling `.md` per task script that used to live at the root (`scripts/build.sh` → [scripts/build.sh.md](scripts/build.sh.md), `scripts/format.sh` → [scripts/format.sh.md](scripts/format.sh.md), `scripts/release.sh` → [scripts/release.sh.md](scripts/release.sh.md), `scripts/run.sh` → [scripts/run.sh.md](scripts/run.sh.md), `scripts/test.sh` → [scripts/test.sh.md](scripts/test.sh.md)).
+- One sibling `.md` per script in `scripts/` (`entry.sh` → [entry.md](scripts/entry.sh.md), `env.sh` → [env.md](scripts/env.sh.md), `version.sh` → [version.go.md](scripts/version.sh.md), `docs.sh` → [docs.md](scripts/docs.sh.md)), plus `scripts/README.md` as the hub.
+- One sibling `.md` per bundle in `tools/` (`tools/<name>/update.md`), plus `tools/README.md` as the hub. The 7zip bundle is documented by `tools/7zip/update.sh.md` like the others.
 - `README.md` stays the project front page; do not restructure it.
 
 Rules for keeping these files current:
 
 - When you add, rename, remove, or repurpose a documented file — a Go file, a script, or a bundle — update its sibling `.md` **in the same change**. A new file without its page is incomplete work; a stale page is worse than none.
 - Source every fact: the `.go`/`.sh`/`.bash` file itself, this file (AGENTS.md), and README.md are the accepted sources. Never invent flags, exit codes, extensions, or bundle-platform matrices.
-- Use plain relative links (`cli.md`, `../../README.md`) with the linking file's `.md` path — barnacle rewrites them to `.html`. Do not link to files barnacle does not render (binaries, `.sh`, `LICENSE`); link the related `.md` page (for external references, a full `https://` URL is fine).
+- Use plain relative links (`cli.go.md`, `../../README.md`) with the linking file's `.md` path — barnacle rewrites them to `.html`. Do not link to files barnacle does not render (binaries, `.sh`, `LICENSE`); link the related `.md` page (for external references, a full `https://` URL is fine).
 - A `foo.md` and a `foo.mmd` may not coexist for the same stem — barnacle fails the whole site rather than overwriting.
 - Hub pages (`README.md` in each documented directory) list their siblings; adding a page means linking it from the hub too.
-- Barnacle skips hidden files by default, so the `.common.env` and `.<platform>.env` cascade is documented inside [scripts/env.md](scripts/env.md) — keep it accurate there instead of adding hidden doc files.
+- Barnacle skips hidden files by default, so the `.common.env` and `.<platform>.env` cascade is documented inside [scripts/env.sh.md](scripts/env.sh.md) — keep it accurate there instead of adding hidden doc files.
 - Regenerate and self-review the site before publishing: `./scripts/docs.sh`; the generator output must remain free of broken local links.
 
 Definition of Done addition: a change that touches any documented file updates (or creates) its sibling page in the same commit.

@@ -1,6 +1,6 @@
 # The docs generator (`scripts/docs.sh`)
 
-Generates the documentation site you are reading: it runs the pinned [barnacle](../tools/barnacle/update.md) binary against this repository.
+Generates the documentation site you are reading: it runs the pinned [barnacle](../tools/barnacle/update.sh.md) binary against this repository.
 
 Barnacle scans the working tree for Markdown (`.md`) and Mermaid (`.mmd`) files, renders each as a page, and rewrites the relative links between them. Generated output is static HTML; it is written to `./site/` by default and is never committed (`/site/` is in `.gitignore`).
 
@@ -17,7 +17,7 @@ Any arguments other than `--help`/`-h` are forwarded to barnacle verbatim; see `
 
 ## How it locates barnacle
 
-Sources [entry.md](entry.md); `BARNACLE_BIN` comes from the [cascade](env.md) (`tools/barnacle/v<version>/<platform>/barnacle[.exe]`, falling back to `barnacle` on `PATH`). When `BARNACLE_BIN` is unset or not executable, the script fails with instructions to run `tools/barnacle/update.sh` (or set `BARNACLE_BIN` explicitly). It then runs barnacle with the repository root as the working directory, so barnacle's auto-discovered `./.barnacle.json` (optional, absent in this repository) and its default `./site/` output land at the repository root regardless of the caller's cwd.
+Sources [entry.sh.md](entry.sh.md); `BARNACLE_BIN` comes from the [cascade](env.sh.md) (`tools/barnacle/v<version>/<platform>/barnacle[.exe]`, falling back to `barnacle` on `PATH`). When `BARNACLE_BIN` is unset or not executable, the script fails with instructions to run `tools/barnacle/update.sh` (or set `BARNACLE_BIN` explicitly). It then runs barnacle with the repository root as the working directory, so barnacle's auto-discovered `./.barnacle.json` (optional, absent in this repository) and its default `./site/` output land at the repository root regardless of the caller's cwd.
 
 ## What the site contains
 
@@ -25,5 +25,5 @@ Every `.md`/`.mmd` in the tree, including this one — see the [root README](../
 
 ## Related pages
 
-- [../tools/barnacle/update.md](../tools/barnacle/update.md) — the pinned binaries and how to refresh them
-- [entry.md](entry.md) · [env.md](env.md)
+- [../tools/barnacle/update.sh.md](../tools/barnacle/update.sh.md) — the pinned binaries and how to refresh them
+- [entry.sh.md](entry.sh.md) · [env.sh.md](env.sh.md)

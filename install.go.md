@@ -21,6 +21,6 @@
 ## Related pages
 
 - [executable.md](executable.md) — platform-specific removal of the running binary
-- [update.md](update.md) — the self update that shares `replaceFile`/`installPath`
-- [main.md](main.md) — command dispatch
+- [update.go.md](update.go.md) — the self update that shares `replaceFile`/`installPath`
+- [main.go.md](main.go.md) — command dispatch
 - [README.md](README.md) — the self-management section

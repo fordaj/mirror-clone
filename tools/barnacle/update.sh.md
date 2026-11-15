@@ -36,7 +36,7 @@ Licenses: MIT — see `v0.0.1.0.17/<platform>/LICENSE`. Environment overrides: `
 
 ## How the repository uses it
 
-[scripts/docs.sh](../../scripts/docs.md) resolves `BARNACLE_BIN` through the [env cascade](../../scripts/env.md) and generates `./site/` from the repo root; the output is git-ignored.
+[scripts/docs.sh](../../scripts/docs.sh.md) resolves `BARNACLE_BIN` through the [env cascade](../../scripts/env.sh.md) and generates `./site/` from the repo root; the output is git-ignored.
 
 ## Related pages
 

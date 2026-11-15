@@ -31,11 +31,11 @@ Assets consumed (example for tag `26.06`): `7z2606-linux-x64.tar.xz` → `linux-
 
 Environment overrides: `SEVENZIP_REPO` (default `ip7z/7zip`), `SEVENZIP_TAG`. `--dry-run` lists assets, planned digests and removals without touching anything; `--help` shows usage. Prerequisites: `gh` and `tar` with xz support (macOS bsdtar handles `.tar.xz` natively; otherwise `xz` is required). `update.sh` resolves its own directory, so it can run from anywhere. The `.exe` installers, `.msi` packages, extra `.7z` builds and source archives are ignored.
 
-After a refresh, `scripts/.common.env`'s `SEVENZIP_VERSION_DIR` pin needs no edit: [env.sh](../../scripts/env.md) prefers the newest `tools/7zip/v*` directory (`resolve_version_dir`), so the pin is only a fallback. Note that a refresh can drop support for platforms upstream stops publishing (today: Linux x86, ARM, x86-64, ARM64; macOS x64, ARM64; Windows x86 via `7zr.exe`).
+After a refresh, `scripts/.common.env`'s `SEVENZIP_VERSION_DIR` pin needs no edit: [env.sh](../../scripts/env.sh.md) prefers the newest `tools/7zip/v*` directory (`resolve_version_dir`), so the pin is only a fallback. Note that a refresh can drop support for platforms upstream stops publishing (today: Linux x86, ARM, x86-64, ARM64; macOS x64, ARM64; Windows x86 via `7zr.exe`).
 
 ## How the repository uses it
 
-`SEVENZZ_BIN` resolves through the [env cascade](../../scripts/env.md) to `mac-*/7zz` or `linux-*/7zz` (or `windows/7zr.exe`). It is used by [release.sh](../../scripts/release.md) as a `zip` replacement (`7zz a -tzip`) and by the legacy `.7z` tool updaters ([versioner](../versioner/update.md), [logamuffin](../logamuffin/update.md)).
+`SEVENZZ_BIN` resolves through the [env cascade](../../scripts/env.sh.md) to `mac-*/7zz` or `linux-*/7zz` (or `windows/7zr.exe`). It is used by [release.sh](../../scripts/release.sh.md) as a `zip` replacement (`7zz a -tzip`) and by the legacy `.7z` tool updaters ([versioner](../versioner/update.sh.md), [logamuffin](../logamuffin/update.sh.md)).
 
 ## Related pages
 

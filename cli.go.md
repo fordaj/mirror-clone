@@ -16,10 +16,10 @@
 
 The usage text (`usageText`) documents the same surface: `-b/--branch`, `--mirror-cache-dir`, `-j/--jobs` (default: number of CPUs), `--log-level` (error, warn, info, debug; default info), `-q/--quiet` (same as `--log-level error`), `-v/--version`, `-h/--help`.
 
-Flag semantics are applied in [main.go](main.md); `--log-level` values are converted with `ParseLevel` ([logger.md](logger.md)).
+Flag semantics are applied in [main.go](main.go.md); `--log-level` values are converted with `ParseLevel` ([logger.go.md](logger.go.md)).
 
 ## Related pages
 
-- [main.md](main.md) — where the parsed options are consumed
-- [logger.md](logger.md) — `ParseLevel` and the levels
+- [main.go.md](main.go.md) — where the parsed options are consumed
+- [logger.go.md](logger.go.md) — `ParseLevel` and the levels
 - [README.md](README.md) — the user-facing option table

@@ -17,13 +17,13 @@ The six supported platforms are `linux-x86_64`, `linux-arm64`, `macos-x86_64`, `
 
 ## Version stamping
 
-When the bundled [versioner](../tools/versioner/update.md) is available, the version comes from [scripts/version.sh](version.md); otherwise the build warns and stamps `dev`. The commit and the build date come from git (`rev-parse --short HEAD`, `show -s --format=%cI`). Everything is stamped with `-ldflags "-X main.version=... -X main.commit=... -X main.date=... -X main.mode=..."` (see [version.md](../version.md)); release mode adds `-s -w` and `-trimpath`, debug mode uses `-gcflags "all=-N -l"`. `CGO_ENABLED=0` for every build.
+When the bundled [versioner](../tools/versioner/update.sh.md) is available, the version comes from [scripts/version.sh](version.sh.md); otherwise the build warns and stamps `dev`. The commit and the build date come from git (`rev-parse --short HEAD`, `show -s --format=%cI`). Everything is stamped with `-ldflags "-X main.version=... -X main.commit=... -X main.date=... -X main.mode=..."` (see [version.sh.md](../version.go.md)); release mode adds `-s -w` and `-trimpath`, debug mode uses `-gcflags "all=-N -l"`. `CGO_ENABLED=0` for every build.
 
-Sources [scripts/entry.md](entry.md) for the environment cascade and `log()`. Requires `go` and `git` on `PATH`.
+Sources [scripts/entry.sh.md](entry.sh.md) for the environment cascade and `log()`. Requires `go` and `git` on `PATH`.
 
 ## Related pages
 
-- [version.md](../version.md) — the ldflags variables and `versionString`
-- [scripts/release.md](release.md) — the release pipeline that calls this script
-- [scripts/run.md](run.md) — running what this builds
-- [scripts/test.md](test.md) — the checks the sources must pass
+- [version.sh.md](../version.go.md) — the ldflags variables and `versionString`
+- [scripts/release.sh.md](release.sh.md) — the release pipeline that calls this script
+- [scripts/run.sh.md](run.sh.md) — running what this builds
+- [scripts/test.sh.md](test.sh.md) — the checks the sources must pass
