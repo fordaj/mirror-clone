@@ -15,7 +15,7 @@ tools/<name>/
 - Binaries are pinned by version directory; the pinned version is named by `*_VERSION_DIR` in [`scripts/.common.env`](../scripts/env.md). `scripts/env.sh` resolves the **newest** `v*` directory present (`resolve_version_dir`), so the pin is a fallback, not a hard lock.
 - `<platform>` is the hyphenated `<os>-<arch>` name (`linux-x86_64`, `macos-arm64`, `windows-x86_64`, …), matching `PROJECT_PLATFORM`. The 7zip bundle is the exception (see below).
 - `update.sh` downloads the latest (or `--tag`ged) upstream release via `gh`, verifies checksums, stages into a temporary directory, swaps in atomically, and deletes superseded version folders only after the new one is staged — a failed refresh leaves the previous bundle intact. Each script has `--dry-run`, `--help`, and resolves its own directory (or sources `scripts/entry.sh`), so it can run from anywhere.
-- Only the binary is kept, except [barnacle](barnacle/update.md), which also retains the upstream MIT `LICENSE`.
+- Only the binary is kept, except [barnacle](barnacle/update.md), which also retains the upstream MIT `LICENSE`, and [7zip](7zip/update.md), which keeps the full upstream payload (docs and `MANUAL/`).
 
 ## The bundles
 
@@ -25,24 +25,24 @@ tools/<name>/
 | [logamuffin](logamuffin/update.md) | Structured logging backend for `log()` in the scripts | [update.sh](logamuffin/update.md) |
 | [runner-spawner](runner-spawner/update.md) | Manages self-hosted CI runners (not invoked by any script here; macOS + Windows only, Linux binaries still shipped) | [update.sh](runner-spawner/update.md) |
 | [barnacle](barnacle/update.md) | Renders this documentation site | [update.sh](barnacle/update.md) |
-| [7zip](#7zip) | Vendored 7-Zip binaries (zip/7z archive creation) | this page |
+| [7zip](7zip/update.md) | Vendored 7-Zip binaries (zip/7z archive creation) | [update.sh](7zip/update.md) |
 
 The pinned versions (in `scripts/.common.env`): versioner `v0.0.3.0.5`, logamuffin `v0.1.3.0.35`, runner-spawner `v0.0.1.2.6`, barnacle `v0.0.1.0.5`, 7zip `v26.06`.
 
-`scripts/.common.env` and `scripts/.<platform>.env` select these via `*_VERSION_DIR`/`*_BIN`; see [env.md](../scripts/env.md). Archives are platform-native (`.tar.gz` on macOS/Linux, `.zip` on Windows) for barnacle and runner-spawner; versioner and logamuffin still ship legacy `.7z` archives.
+`scripts/.common.env` and `scripts/.<platform>.env` select these via `*_VERSION_DIR`/`*_BIN`; see [env.md](../scripts/env.md). Archives are platform-native (`.tar.gz` on macOS/Linux, `.zip` on Windows) for barnacle and runner-spawner; versioner and logamuffin still ship legacy `.7z` archives; 7zip ships `.tar.xz` for macOS/Linux and a bare `7zr.exe` for Windows.
 
 ## 7zip
 
-`tools/7zip/v26.06/` is a vendored copy of [7-Zip](https://www.7-zip.org/) 26.06 (upstream `License.txt`, `History.txt`, `MANUAL/` and per-platform `7zz`/`7zzs`/`7zr.exe`). It is **not** refreshed by an `update.sh` and is not produced from a GitHub release the way the other bundles are; it is checked in as-is and tracked in git (including the Windows binaries, via a `!tools/**/*.exe` exception in `.gitignore`).
+`tools/7zip/v26.06/` is a vendored copy of [7-Zip](https://www.7-zip.org/) 26.06, fetched from the [ip7z/7zip](https://github.com/ip7z/7zip) GitHub release by [7zip/update.sh](7zip/update.md) and tracked in git (including the Windows binary, via a `!tools/**/*.exe` exception in `.gitignore`). Unlike the other bundles it keeps the **full upstream payload** (binaries plus `readme.txt`, `History.txt`, `License.txt` and `MANUAL/`) rather than just the executable, the platform naming is the vendored one (`linux-x64`, `mac-arm64`, `windows`, …, not the `<os>-<arch>` layout), and the release tag carries no leading `v` while the bundle directory is `v<tag>`.
 
-Layout: `v26.06/{linux-arm,linux-arm64,linux-x64,linux-x86,mac-arm64,mac-x64}/7zz` (+ `7zzs`) and `v26.06/windows/7zr.exe` — note the non-standard platform naming, unlike the `<os>-<arch>` layout of the other bundles. `scripts/.common.env` pins `SEVENZIP_VERSION_DIR=tools/7zip/v26.06`; each platform env file points `SEVENZZ_BIN` at the matching binary (`7zz` for macOS/Linux, `7zr.exe` for Windows, 7z-format only), or `env.sh` falls back to `7zz`/`7z` on `PATH` when the bundled one is missing (see [env.md](../scripts/env.md)).
+Layout: `v26.06/{linux-arm,linux-arm64,linux-x64,linux-x86,mac-arm64,mac-x64}/7zz` (+ `7zzs` except macOS) and `v26.06/windows/7zr.exe`. `scripts/.common.env` pins `SEVENZIP_VERSION_DIR=tools/7zip/v26.06`; each platform env file points `SEVENZZ_BIN` at the matching binary (`7zz` for macOS/Linux, `7zr.exe` for Windows, 7z-format only), or `env.sh` falls back to `7zz`/`7z` on `PATH` when the bundled one is missing (see [env.md](../scripts/env.md)).
 
 Consumers:
 
 - [`release.sh`](../scripts/release.md) uses `SEVENZZ_BIN` as a `zip` replacement (`7zz a -tzip`) to create the release archives when `zip` is not installed.
 - The `.7z` bundle updaters ([versioner](versioner/update.md), [logamuffin](logamuffin/update.md)) need a `7z`/`7zz` on `PATH` — the vendored binaries qualify.
 
-To refresh 7zip, replace the `v26.06` directory with the new upstream release and update `SEVENZIP_VERSION_DIR` in `scripts/.common.env` (and the per-platform paths if the layout changes).
+To refresh 7zip, run `tools/7zip/update.sh` (see its [page](7zip/update.md) for the asset mapping and the digest verification). The `SEVENZIP_VERSION_DIR` pin and the per-platform paths need no edit as long as the layout stays the same — `resolve_version_dir` prefers the newest `tools/7zip/v*` directory.
 
 ## Refreshing a pinned tool
 
@@ -51,7 +51,7 @@ tools/barnacle/update.sh            # download the latest release, verify, swap
 tools/barnacle/update.sh --dry-run  # show what would change
 ```
 
-(Same flags for `versioner`, `logamuffin`, `runner-spawner`.) Refreshes are checksum-verified; the barnacle and runner-spawner updaters verify only the archives downloaded for the run and refuse to install when an entry for a downloaded asset is missing; the versioner and logamuffin updaters verify `checksums.txt` wholesale and only warn when it is absent. Runner-spawner additionally refuses to install at all without a checksums file — it never installs unverified binaries — while barnacle only warns. The runner-spawner bundle was most recently updated to **v0.0.1.2.6**.
+(Same flags for `versioner`, `logamuffin`, `runner-spawner`, `7zip`.) Refreshes are checksum-verified; the barnacle and runner-spawner updaters verify only the archives downloaded for the run and refuse to install when an entry for a downloaded asset is missing; the versioner and logamuffin updaters verify `checksums.txt` wholesale and only warn when it is absent. The 7zip updater verifies every downloaded asset against the per-asset SHA-256 digest GitHub publishes (there is no checksums file upstream) and refuses to install when an asset has no digest entry. Runner-spawner additionally refuses to install at all without a checksums file — it never installs unverified binaries — while barnacle only warns. The runner-spawner bundle was most recently updated to **v0.0.1.2.6**.
 
 ## Related pages
 

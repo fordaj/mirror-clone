@@ -24,8 +24,9 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd -- "$SCRIPT_DIR/.." && pwd)"
 # shellcheck disable=SC1091
-source "$SCRIPT_DIR/scripts/entry.sh"
+source "$SCRIPT_DIR/entry.sh"
 
 APP_NAME="mirror-clone"
 
@@ -44,7 +45,7 @@ windows-*) BINARY_NAME="$APP_NAME.exe" ;;
 *) BINARY_NAME="$APP_NAME" ;;
 esac
 
-BUILD_DIR="$SCRIPT_DIR/dist"
+BUILD_DIR="$REPO_ROOT/dist"
 if [[ "${DEBUG:-false}" == "true" || "${DEBUG:-}" == "1" ]]; then
     BUILD_DIR="$BUILD_DIR/debug"
 fi
@@ -56,7 +57,7 @@ if [[ ! -x "$BINARY" ]]; then
         die "the binary $BINARY does not exist or is not executable"
     fi
     log ERROR "no binary for $PLATFORM at $BINARY" >&2
-    if [[ -x "$SCRIPT_DIR/dist/debug/$PLATFORM/$BINARY_NAME" ]]; then
+    if [[ -x "$REPO_ROOT/dist/debug/$PLATFORM/$BINARY_NAME" ]]; then
         log ERROR "there is a debug build, run it with: DEBUG=true $0 $*" >&2
     else
         log ERROR "build it with: $SCRIPT_DIR/build.sh --platform $PLATFORM" >&2

@@ -25,11 +25,12 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd -- "$SCRIPT_DIR/.." && pwd)"
 # shellcheck disable=SC1091
-source "$SCRIPT_DIR/scripts/entry.sh"
+source "$SCRIPT_DIR/entry.sh"
 
 APP_NAME="mirror-clone"
-OUTPUT_DIR="${OUTPUT_DIR:-$SCRIPT_DIR/dist}"
+OUTPUT_DIR="${OUTPUT_DIR:-$REPO_ROOT/dist}"
 MODE="release"
 CLEAN=0
 ALL=0
@@ -256,15 +257,15 @@ log INFO "platforms: ${TARGETS[*]}"
 
 VERSION="dev"
 if [[ -x "${VERSIONER_BIN:-}" ]]; then
-    version_output="$("$SCRIPT_DIR/scripts/version.sh" --format text)" || die "could not compute the version"
+    version_output="$("$SCRIPT_DIR/version.sh" --format text)" || die "could not compute the version"
     VERSION="$(printf '%s\n' "$version_output" | sed -n 's/^VERSION=//p' | tail -1)"
     [[ -n "$VERSION" ]] || die "could not parse VERSION from the versioner output"
 else
     log WARNING "versioner not found, the version is set to dev"
 fi
 
-COMMIT="$(git -C "$SCRIPT_DIR" rev-parse --short HEAD 2>/dev/null || printf 'unknown')"
-BUILD_DATE="$(git -C "$SCRIPT_DIR" show -s --format=%cI HEAD 2>/dev/null || date -u +%Y-%m-%dT%H:%M:%SZ)"
+COMMIT="$(git -C "$REPO_ROOT" rev-parse --short HEAD 2>/dev/null || printf 'unknown')"
+BUILD_DATE="$(git -C "$REPO_ROOT" show -s --format=%cI HEAD 2>/dev/null || date -u +%Y-%m-%dT%H:%M:%SZ)"
 log INFO "version: $VERSION (commit $COMMIT, $BUILD_DATE)"
 
 LDFLAGS="-X main.version=$VERSION -X main.commit=$COMMIT -X main.date=$BUILD_DATE -X main.mode=$MODE"
@@ -284,7 +285,7 @@ if [[ "$CLEAN" -eq 1 ]]; then
 fi
 mkdir -p -- "$OUTPUT_DIR"
 
-cd "$SCRIPT_DIR"
+cd "$REPO_ROOT"
 
 for platform in "${TARGETS[@]}"; do
     go_target "$platform" || die "unsupported platform: $platform"

@@ -24,8 +24,9 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd -- "$SCRIPT_DIR/.." && pwd)"
 # shellcheck disable=SC1091
-source "$SCRIPT_DIR/scripts/entry.sh"
+source "$SCRIPT_DIR/entry.sh"
 
 APP_NAME="mirror-clone"
 COVERAGE=0
@@ -96,7 +97,7 @@ run_check() {
     return 1
 }
 
-cd "$SCRIPT_DIR"
+cd "$REPO_ROOT"
 
 if ! need_cmd go; then
     log ERROR "the go toolchain is required"
@@ -172,9 +173,9 @@ elif command -v shellcheck >/dev/null 2>&1; then
         "$SCRIPT_DIR/test.sh"
         "$SCRIPT_DIR/run.sh"
         "$SCRIPT_DIR/format.sh"
-        "$SCRIPT_DIR/scripts/entry.sh"
-        "$SCRIPT_DIR/scripts/env.sh"
-        "$SCRIPT_DIR/scripts/version.sh"
+        "$SCRIPT_DIR/entry.sh"
+        "$SCRIPT_DIR/env.sh"
+        "$SCRIPT_DIR/version.sh"
     )
     run_check "shellcheck" shellcheck -x "${SCRIPTS[@]}" || true
 else

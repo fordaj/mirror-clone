@@ -61,7 +61,7 @@ Layout — documentation lives next to the code it describes:
 - One sibling `.md` per root Go file (`cli.go` → [cli.md](cli.md)), plus `main.md` for the entry point. Two deliberate exceptions: one `executable.md` page covers both `executable_unix.go` and `executable_windows.go` (the build-tag pair shares one contract), and one `scripts/release.md` page covers both `release.go` and `scripts/release.sh` (the stem is taken by both).
 - One sibling `.md` per task script that used to live at the root (`scripts/build.sh` → [scripts/build.md](scripts/build.md), `scripts/format.sh` → [scripts/format.md](scripts/format.md), `scripts/release.sh` → [scripts/release.md](scripts/release.md), `scripts/run.sh` → [scripts/run.md](scripts/run.md), `scripts/test.sh` → [scripts/test.md](scripts/test.md)).
 - One sibling `.md` per script in `scripts/` (`entry.sh` → [entry.md](scripts/entry.md), `env.sh` → [env.md](scripts/env.md), `version.sh` → [version.md](scripts/version.md), `docs.sh` → [docs.md](scripts/docs.md)), plus `scripts/README.md` as the hub.
-- One sibling `.md` per bundle in `tools/` (`tools/<name>/update.md`), plus `tools/README.md` as the hub. The vendored 7zip tree (`tools/7zip/`) has no sibling pages — it is documented inside the hub only.
+- One sibling `.md` per bundle in `tools/` (`tools/<name>/update.md`), plus `tools/README.md` as the hub. The 7zip bundle is documented by `tools/7zip/update.md` like the others.
 - `README.md` stays the project front page; do not restructure it.
 
 Rules for keeping these files current:

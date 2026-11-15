@@ -30,8 +30,9 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd -- "$SCRIPT_DIR/.." && pwd)"
 # shellcheck disable=SC1091
-source "$SCRIPT_DIR/scripts/entry.sh"
+source "$SCRIPT_DIR/entry.sh"
 
 CHECK=0
 DRY_RUN=0
@@ -83,7 +84,7 @@ need_cmd() {
 # full run, with the arguments of the configuration.
 config_args() {
     local tool="$1"
-    uv run --project "${UV_PROJECT:-$SCRIPT_DIR}" python -c '
+    uv run --project "${UV_PROJECT:-$REPO_ROOT}" python -c '
 import json
 import os
 import sys
@@ -144,7 +145,7 @@ if [[ "$CHECK" -eq 1 && "$DRY_RUN" -eq 1 ]]; then
     usage_error "--check and --dry-run are mutually exclusive"
 fi
 
-cd "$SCRIPT_DIR"
+cd "$REPO_ROOT"
 
 need_cmd uv
 
@@ -189,7 +190,7 @@ log INFO "formatting the sources with formattington..."
 STATUS=0
 # The standard input is redirected to /dev/null: a formatter without matching
 # files reads from the standard input and would block on a terminal.
-uv run --project "${UV_PROJECT:-$SCRIPT_DIR}" formattington "${ARGS[@]}" "${TARGET[@]}" </dev/null || STATUS=$?
+uv run --project "${UV_PROJECT:-$REPO_ROOT}" formattington "${ARGS[@]}" "${TARGET[@]}" </dev/null || STATUS=$?
 
 case "$STATUS" in
 0)

@@ -25,12 +25,13 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd -- "$SCRIPT_DIR/.." && pwd)"
 # shellcheck disable=SC1091
-source "$SCRIPT_DIR/scripts/entry.sh"
+source "$SCRIPT_DIR/entry.sh"
 
 APP_NAME="mirror-clone"
-OUTPUT_DIR="${OUTPUT_DIR:-$SCRIPT_DIR/dist}"
-RELEASE_DIR="${RELEASE_DIR:-$SCRIPT_DIR/temp/release}"
+OUTPUT_DIR="${OUTPUT_DIR:-$REPO_ROOT/dist}"
+RELEASE_DIR="${RELEASE_DIR:-$REPO_ROOT/temp/release}"
 DRY_RUN=0
 SKIP_BUILD=0
 PUBLISH=1
@@ -169,7 +170,7 @@ if [[ -z "${VERSIONER_BIN:-}" || ! -x "${VERSIONER_BIN:-}" ]]; then
 fi
 log INFO "using versioner: $VERSIONER_BIN"
 
-VERSION_OUTPUT="$("$SCRIPT_DIR/scripts/version.sh" --format text)" || die "could not compute the version"
+VERSION_OUTPUT="$("$SCRIPT_DIR/version.sh" --format text)" || die "could not compute the version"
 VERSION="$(printf '%s\n' "$VERSION_OUTPUT" | sed -n 's/^VERSION=//p' | tail -1)"
 TAG="$(printf '%s\n' "$VERSION_OUTPUT" | sed -n 's/^TAG=//p' | tail -1)"
 [[ -n "$VERSION" ]] || die "could not parse VERSION from the versioner output"
