@@ -31,6 +31,7 @@ resolve_version_dir() {
 VERSIONER_VERSION_DIR="$(resolve_version_dir "$VERSIONER_DIR" "$VERSIONER_VERSION_DIR")"
 LOGAMUFFIN_VERSION_DIR="$(resolve_version_dir "$LOGAMUFFIN_DIR" "$LOGAMUFFIN_VERSION_DIR")"
 RUNNER_SPAWNER_VERSION_DIR="$(resolve_version_dir "$RUNNER_SPAWNER_DIR" "$RUNNER_SPAWNER_VERSION_DIR")"
+BARNACLE_VERSION_DIR="$(resolve_version_dir "$BARNACLE_DIR" "$BARNACLE_VERSION_DIR")"
 SEVENZIP_VERSION_DIR="$(resolve_version_dir "$SEVENZIP_DIR" "$SEVENZIP_VERSION_DIR")"
 
 # OS specific
@@ -66,6 +67,7 @@ absolutize_bin() {
 absolutize_bin VERSIONER_BIN
 absolutize_bin LOGAMUFFIN_BIN
 absolutize_bin RUNNER_SPAWNER_BIN
+absolutize_bin BARNACLE_BIN
 absolutize_bin SEVENZZ_BIN
 
 # --- Fall back to PATH for missing bundles -----------------------------
@@ -85,6 +87,7 @@ fallback_to_path() {
 fallback_to_path VERSIONER_BIN versioner
 fallback_to_path LOGAMUFFIN_BIN logamuffin
 fallback_to_path RUNNER_SPAWNER_BIN runner-spawner
+fallback_to_path BARNACLE_BIN barnacle
 
 if [[ -z "${SEVENZZ_BIN:-}" || ! -x "${SEVENZZ_BIN:-}" ]]; then
     for sevenzip_cmd in 7zz 7z; do

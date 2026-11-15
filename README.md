@@ -212,6 +212,10 @@ compiles every platform with `build.bash`, packages the binary, the `LICENSE`
 and the `README.md` into one archive per platform, creates the annotated tag,
 pushes it and uploads the archives to the GitHub release of that tag.
 
+## Documentation
+
+The documentation is written in Markdown next to the code and rendered into a static site by barnacle. See [AGENTS.md](AGENTS.md) for the conventions and the list of pages, and run `./scripts/docs.sh` to regenerate the site into `site/`.
+
 ## License
 
-[MIT](LICENSE)
+[MIT](https://github.com/fordaj/mirror-clone/blob/main/LICENSE)
