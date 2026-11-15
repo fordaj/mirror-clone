@@ -8,28 +8,28 @@ PROJECT_ROOT="$(cd -- "$SCRIPT_DIR/../.." && pwd)"
 
 (return 0 2>/dev/null) || source "$PROJECT_ROOT/scripts/entry.sh"
 
-REPO="${LOGAMUFFIN_REPO:-fordaj/logamuffin}"
-TAG="${LOGAMUFFIN_TAG:-}"
 DRY_RUN=0
+REPO="${VERSIONER_REPO:-fordaj/Versioner}"
+TAG="${VERSIONER_TAG:-}"
 
 usage() {
     cat <<'EOF'
-Usage: tools/logamuffin/update.bash [--dry-run] [--tag TAG] [--repo REPO]
+Usage: tools/versioner/update.sh [--dry-run] [--tag TAG] [--repo REPO]
 
-Download the latest Logamuffin release from GitHub via gh, extract each
-platform binary into tools/logamuffin/<tag>/<platform>/ (platform is the
-bundled <os>-<arch> layout, e.g. macos-arm64), and delete old version folders.
-Only the binary is kept.
+Download the latest Versioner release from GitHub via gh, extract each
+platform binary into tools/versioner/<tag>/<platform>/ (platform is the
+bundled <os>-<arch> layout, e.g. darwin-amd64 -> macos-x86_64), and delete old
+version folders. Only the binary is kept.
 
 Flags:
   --dry-run, -n   Resolve tag + list planned assets, change nothing.
   --tag TAG       Pin a specific release tag (default: latest release).
-  --repo REPO     Repository slug (default: fordaj/logamuffin).
+  --repo REPO     Repository slug (default: fordaj/Versioner).
   --help, -h      Show this help.
 
 Env:
-  LOGAMUFFIN_REPO  Repository slug (overridden by --repo).
-  LOGAMUFFIN_TAG   Pinned tag (overridden by --tag).
+  VERSIONER_REPO  Repository slug (overridden by --repo).
+  VERSIONER_TAG   Pinned tag (overridden by --tag).
 EOF
 }
 
@@ -102,9 +102,9 @@ if [[ "$DRY_RUN" -ne 1 ]]; then
     fi
 fi
 
-LOGAMUFFIN_ROOT="$SCRIPT_DIR"
-[[ -d "$LOGAMUFFIN_ROOT" ]] || die "logamuffin bundle directory not found: $LOGAMUFFIN_ROOT"
-log INFO "logamuffin bundle directory: $LOGAMUFFIN_ROOT"
+VERSIONER_ROOT="$SCRIPT_DIR"
+[[ -d "$VERSIONER_ROOT" ]] || die "versioner bundle directory not found: $VERSIONER_ROOT"
+log INFO "versioner bundle directory: $VERSIONER_ROOT"
 log INFO "repository: $REPO"
 
 if [[ -z "$TAG" ]]; then
@@ -118,7 +118,7 @@ fi
 log INFO "release tag: $TAG"
 
 # parse_stem_to_platform <stem> sets PLATFORM (e.g.
-# Logamuffin_v0.1.3.0.35_macos-x86_64 -> macos-x86_64) or returns 1 for
+# Versioner_v0.0.3.0.5_darwin-arm64 -> macos-arm64) or returns 1 for
 # unknown values. Sets globals to avoid subshell-die pitfalls. Asset
 # names append _<os>-<arch> after the tag, and arch may itself contain
 # "_" (x86_64), so the suffix is matched as a whole instead of splitting
@@ -166,7 +166,7 @@ if [[ "$DRY_RUN" -eq 1 ]]; then
     ((asset_count > 0)) || die "no .7z assets found for $TAG in $REPO"
     shopt -s nullglob
     old_found=0
-    for dir in "$LOGAMUFFIN_ROOT"/v*/; do
+    for dir in "$VERSIONER_ROOT"/v*/; do
         [[ -d "$dir" ]] || continue
         dir_name="$(basename "$dir")"
         if [[ "$dir_name" != "$TAG" ]]; then
@@ -177,7 +177,7 @@ if [[ "$DRY_RUN" -eq 1 ]]; then
     if [[ "$old_found" -eq 0 ]]; then
         log INFO "no old version folders to remove"
     fi
-    log INFO "dry run complete: would update $LOGAMUFFIN_ROOT/$TAG"
+    log INFO "dry run complete: would update $VERSIONER_ROOT/$TAG"
     exit 0
 fi
 
@@ -195,7 +195,7 @@ cleanup() {
 trap cleanup EXIT
 
 TMP_DIR="$(mktemp -d)"
-STAGE_DIR="$(mktemp -d "$LOGAMUFFIN_ROOT/.tmp.XXXXXX")"
+STAGE_DIR="$(mktemp -d "$VERSIONER_ROOT/.tmp.XXXXXX")"
 
 log INFO "downloading $TAG assets from $REPO..."
 gh release download "$TAG" --repo "$REPO" --dir "$TMP_DIR" --pattern '*.7z' --pattern 'checksums.txt' --clobber
@@ -223,7 +223,7 @@ for archive in "${archives[@]}"; do
     base="$(basename "$archive")"
     stem="${base%.7z}"
     if ! parse_stem_to_platform "$stem"; then
-        die "unknown platform in asset '$base' (expected <os>-<arch> such as macos-arm64)"
+        die "unknown platform in asset '$base' (expected <os>-<arch> such as darwin-arm64)"
     fi
     if [[ -e "$STAGE_DIR/$PLATFORM" ]]; then
         die "duplicate asset for platform $PLATFORM (from $base)"
@@ -233,12 +233,12 @@ for archive in "${archives[@]}"; do
     mkdir -p "$extract_dir"
     "$SEVENZIP" x -y "$archive" -o"$extract_dir" >/dev/null
     bin_src=""
-    for cand in "$extract_dir/logamuffin" "$extract_dir/logamuffin.exe"; do
+    for cand in "$extract_dir/versioner" "$extract_dir/versioner.exe"; do
         if [[ -f "$cand" ]]; then
             bin_src="$cand"
         fi
     done
-    [[ -n "$bin_src" ]] || die "no logamuffin binary in $base (expected logamuffin or logamuffin.exe at archive root)"
+    [[ -n "$bin_src" ]] || die "no versioner binary in $base (expected versioner or versioner.exe at archive root)"
     bin_name="$(basename "$bin_src")"
     target_dir="$STAGE_DIR/$PLATFORM"
     mkdir -p "$target_dir"
@@ -249,13 +249,13 @@ for archive in "${archives[@]}"; do
     rm -rf -- "$extract_dir"
 done
 
-TAG_DIR="$LOGAMUFFIN_ROOT/$TAG"
+TAG_DIR="$VERSIONER_ROOT/$TAG"
 rm -rf -- "$TAG_DIR"
-mkdir -p "$LOGAMUFFIN_ROOT"
+mkdir -p "$VERSIONER_ROOT"
 mv "$STAGE_DIR" "$TAG_DIR"
 STAGE_DIR=""
 
-for dir in "$LOGAMUFFIN_ROOT"/v*/; do
+for dir in "$VERSIONER_ROOT"/v*/; do
     [[ -d "$dir" ]] || continue
     dir_name="$(basename "$dir")"
     if [[ "$dir_name" != "$TAG" ]]; then
@@ -280,7 +280,7 @@ arm64 | aarch64) host_arch="arm64" ;;
 esac
 host_platform="$host_os-$host_arch"
 host_bin=""
-for cand in "$TAG_DIR/$host_platform/logamuffin" "$TAG_DIR/$host_platform/logamuffin.exe"; do
+for cand in "$TAG_DIR/$host_platform/versioner" "$TAG_DIR/$host_platform/versioner.exe"; do
     if [[ -x "$cand" ]]; then
         host_bin="$cand"
     fi
@@ -288,9 +288,8 @@ done
 if [[ -n "$host_bin" ]]; then
     host_ver="$("$host_bin" --version 2>&1 || true)"
     log INFO "host binary $host_platform reports: $host_ver"
-    expected_ver="${TAG#v}"
     case "$host_ver" in
-    *"$TAG"* | *"$expected_ver"*) ;;
+    *"$TAG"*) ;;
     *) log WARNING "host binary version '$host_ver' does not contain $TAG" ;;
     esac
 else

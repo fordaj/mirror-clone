@@ -8,7 +8,7 @@
 
 ```text
 tools/runner-spawner/
-  update.bash                     # refresh from fordaj/runner-spawner releases
+  update.sh                     # refresh from fordaj/runner-spawner releases
   v0.0.1.2.6/
     macos-arm64/runner-spawner
     macos-x86_64/runner-spawner
@@ -18,7 +18,7 @@ tools/runner-spawner/
     windows-x86_64/runner-spawner.exe
 ```
 
-## `update.bash` in detail
+## `update.sh` in detail
 
 The platform-native archive family (like barnacle, unlike versioner/logamuffin): assets are `*.tar.gz` (macOS/Linux), `*.zip` (Windows) or legacy `.7z`, carrying the tag and the `<os>-<arch>` pair separated by either `_` or `-`. The script:
 
@@ -28,7 +28,7 @@ The platform-native archive family (like barnacle, unlike versioner/logamuffin):
 4. Swaps in the new version directory and deletes superseded `v*` folders only after the new one is fully staged — a failed download leaves the previous bundle intact.
 5. Smoke-tests the host binary (`runner-spawner --version`); a version mismatch only warns.
 
-Environment overrides: `RUNNER_SPAWNER_TOOL_REPO`, `RUNNER_SPAWNER_TAG`. `--dry-run` lists assets and planned removals without touching anything; `--help` shows usage. Prerequisites: `gh` and `tar` (plus `unzip`, or `7z`/`7zz` for legacy `.7z` assets). `update.bash` resolves its own directory, sources [scripts/entry.sh](../../scripts/entry.md) and can run from anywhere.
+Environment overrides: `RUNNER_SPAWNER_TOOL_REPO`, `RUNNER_SPAWNER_TAG`. `--dry-run` lists assets and planned removals without touching anything; `--help` shows usage. Prerequisites: `gh` and `tar` (plus `unzip`, or `7z`/`7zz` for legacy `.7z` assets). `update.sh` resolves its own directory, sources [scripts/entry.sh](../../scripts/entry.md) and can run from anywhere.
 
 ## Related pages
 

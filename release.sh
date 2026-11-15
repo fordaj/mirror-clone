@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 #
-# release.bash - build, package and publish a GitHub release.
+# release.sh - build, package and publish a GitHub release.
 #
 # The version and the tag of the release are computed by versioner, so the
 # tag always matches the history of the repository. Every platform is cross
-# compiled by build.bash and packaged into one archive that contains the
+# compiled by build.sh and packaged into one archive that contains the
 # binary, the LICENSE and the README.md. The archives are uploaded to the
 # GitHub release of the tag.
 #
 # Usage:
-#   ./release.bash                # build, package, tag and publish
-#   ./release.bash --dry-run      # verify everything, change nothing
-#   ./release.bash --skip-build   # use the binaries that are already in dist/
+#   ./release.sh                # build, package, tag and publish
+#   ./release.sh --dry-run      # verify everything, change nothing
+#   ./release.sh --skip-build   # use the binaries that are already in dist/
 #
 # Prerequisites:
 #   git, gh (authenticated with "gh auth login"), zip (or the bundled 7zz)
@@ -46,10 +46,10 @@ PLATFORMS=(
 
 usage() {
     cat <<EOF
-Usage: ./release.bash [options]
+Usage: ./release.sh [options]
 
 Build, package and publish a GitHub release. The version and the tag are
-computed by versioner, the binaries are cross compiled by build.bash and
+computed by versioner, the binaries are cross compiled by build.sh and
 packaged with the LICENSE and the README.md into one archive per platform.
 
 Options:
@@ -139,7 +139,7 @@ log INFO "branch: $BRANCH  HEAD: $HEAD_SHORT"
 if [[ -n "$(git status --porcelain)" ]]; then
     if [[ "$DRY_RUN" -eq 1 ]]; then
         log WARNING "the working tree is not clean (allowed in --dry-run)"
-        git status --short | sed 's/^/release.bash:   /' >&2
+        git status --short | sed 's/^/release.sh:   /' >&2
     else
         die "the working tree is not clean (commit or stash first):"$'\n'"$(git status --short)"
     fi
@@ -165,11 +165,11 @@ fi
 # --- Version and tag (computed by versioner) ---------------------------------
 
 if [[ -z "${VERSIONER_BIN:-}" || ! -x "${VERSIONER_BIN:-}" ]]; then
-    die "no versioner binary found (run tools/versioner/update.bash or set VERSIONER_BIN)"
+    die "no versioner binary found (run tools/versioner/update.sh or set VERSIONER_BIN)"
 fi
 log INFO "using versioner: $VERSIONER_BIN"
 
-VERSION_OUTPUT="$("$SCRIPT_DIR/scripts/version.bash" --format text)" || die "could not compute the version"
+VERSION_OUTPUT="$("$SCRIPT_DIR/scripts/version.sh" --format text)" || die "could not compute the version"
 VERSION="$(printf '%s\n' "$VERSION_OUTPUT" | sed -n 's/^VERSION=//p' | tail -1)"
 TAG="$(printf '%s\n' "$VERSION_OUTPUT" | sed -n 's/^TAG=//p' | tail -1)"
 [[ -n "$VERSION" ]] || die "could not parse VERSION from the versioner output"
@@ -208,7 +208,7 @@ if [[ "$DRY_RUN" -eq 1 ]]; then
         fi
     done
     log INFO "dry run: would run:"
-    log INFO "  $SCRIPT_DIR/build.bash --all --release"
+    log INFO "  $SCRIPT_DIR/build.sh --all --release"
     log INFO "  git tag -a $TAG -m \"$APP_NAME $TAG\""
     log INFO "  git push origin $TAG"
     log INFO "  gh release create $TAG --title \"$APP_NAME $TAG\" --verify-tag --generate-notes <archives>"
@@ -220,7 +220,7 @@ fi
 
 if [[ "$SKIP_BUILD" -eq 0 ]]; then
     log INFO "building every platform in release mode..."
-    "$SCRIPT_DIR/build.bash" --all --release || die "the build failed"
+    "$SCRIPT_DIR/build.sh" --all --release || die "the build failed"
 else
     log INFO "skipping the build, using the binaries in $OUTPUT_DIR"
 fi
@@ -237,7 +237,7 @@ ASSETS=()
 for platform in "${PLATFORMS[@]}"; do
     binary="$OUTPUT_DIR/$platform/$APP_NAME"
     [[ -f "$binary" ]] || binary="$OUTPUT_DIR/$platform/$APP_NAME.exe"
-    [[ -f "$binary" ]] || die "no binary for $platform in $OUTPUT_DIR (run ./build.bash --all)"
+    [[ -f "$binary" ]] || die "no binary for $platform in $OUTPUT_DIR (run ./build.sh --all)"
 
     staging="$RELEASE_DIR/.staging/$platform"
     mkdir -p -- "$staging"

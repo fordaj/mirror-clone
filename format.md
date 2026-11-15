@@ -1,14 +1,14 @@
-# Formatting (`format.bash`)
+# Formatting (`format.sh`)
 
-`format.bash` formats the sources of the repository with [formattington](https://github.com/fordaj/formattington), driven by the configuration in `.formattington.json`: `prettier` (Markdown, JSON), `shfmt -i 4` (shell), `taplo` (TOML), `gofmt` and `goimports` (Go).
+`format.sh` formats the sources of the repository with [formattington](https://github.com/fordaj/formattington), driven by the configuration in `.formattington.json`: `prettier` (Markdown, JSON), `shfmt -i 4` (shell), `taplo` (TOML), `gofmt` and `goimports` (Go).
 
 ## Usage
 
 ```bash
-./format.bash                # format every source of the repository
-./format.bash --check        # change nothing, exit 1 when a file needs formatting
-./format.bash --dry-run      # print the differences, change nothing
-./format.bash --tool shfmt   # run a single formatter
+./format.sh                # format every source of the repository
+./format.sh --check        # change nothing, exit 1 when a file needs formatting
+./format.sh --dry-run      # print the differences, change nothing
+./format.sh --tool shfmt   # run a single formatter
 ```
 
 Options: `--check`, `--dry-run`, `--tool TOOL` (the arguments of the tool are read from `.formattington.json`, so a single tool runs exactly as in a full run), `--parallel` (concurrent; not safe while gofmt and goimports are both configured, so the default is `--series`), `--verbose`. Environment: `FORMATTINGTON_CONFIG_PATH`, `UV_PROJECT`.

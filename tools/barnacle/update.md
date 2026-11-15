@@ -6,7 +6,7 @@
 
 ```text
 tools/barnacle/
-  update.bash                     # refresh from fordaj/barnacle releases
+  update.sh                     # refresh from fordaj/barnacle releases
   v0.0.1.0.5/
     LICENSE                       # upstream MIT text, retained unmodified
     macos-arm64/barnacle
@@ -17,7 +17,7 @@ tools/barnacle/
     windows-x86_64/barnacle.exe
 ```
 
-## `update.bash` in detail
+## `update.sh` in detail
 
 Adapted to barnacle's release format: assets are `barnacle-<platform>.tar.gz` (macOS/Linux) and `barnacle-<platform>.zip` (Windows); legacy `.7z` assets are still accepted as a fallback. The script:
 
@@ -27,7 +27,7 @@ Adapted to barnacle's release format: assets are `barnacle-<platform>.tar.gz` (m
 4. Swaps in the new version directory and deletes superseded `v*` folders only after the new one is fully staged — a failed download leaves the previous bundle intact.
 5. Smoke-tests the host binary (`barnacle --version`); a version that does not contain the tag only warns.
 
-Licenses: MIT — see `v0.0.1.0.5/LICENSE`. Environment overrides: `BARNACLE_REPO`, `BARNACLE_TAG`. `--dry-run` lists assets and planned removals without touching anything; `--help` shows usage. Prerequisites: `gh` and `tar` (plus `unzip`, or `7z`/`7zz` for legacy `.7z` assets). `update.bash` resolves its own directory, so it can run from anywhere.
+Licenses: MIT — see `v0.0.1.0.5/LICENSE`. Environment overrides: `BARNACLE_REPO`, `BARNACLE_TAG`. `--dry-run` lists assets and planned removals without touching anything; `--help` shows usage. Prerequisites: `gh` and `tar` (plus `unzip`, or `7z`/`7zz` for legacy `.7z` assets). `update.sh` resolves its own directory, so it can run from anywhere.
 
 ## How the repository uses it
 

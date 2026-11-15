@@ -10,7 +10,7 @@
 4. **Anchors** every repository-relative `*_BIN` to the repository root (`REPO_ROOT_DIR`), leaving absolute paths untouched — `$VERSIONER_BIN`, `$LOGAMUFFIN_BIN`, `$RUNNER_SPAWNER_BIN`, `$BARNACLE_BIN` and `$SEVENZZ_BIN` end up absolute.
 5. **Falls back to `PATH`** when a bundled binary is missing or not executable — `fallback_to_path` maps `VERSIONER_BIN`→`versioner`, `LOGAMUFFIN_BIN`→`logamuffin`, `RUNNER_SPAWNER_BIN`→`runner-spawner`, `BARNACLE_BIN`→`barnacle`. Not every bundle ships every platform, so the fallback keeps the scripts usable (for example the versioner bundle has no windows-arm64 build).
 
-Everything is exported with `set -a` while sourcing and un-exported at the end (`set +a`), so the cascade does not leak beyond the intended variables. `REPO_ROOT_DIR` is set for callers that need the repository root (for example [version.bash](version.md)).
+Everything is exported with `set -a` while sourcing and un-exported at the end (`set +a`), so the cascade does not leak beyond the intended variables. `REPO_ROOT_DIR` is set for callers that need the repository root (for example [version.sh](version.md)).
 
 ### The SEVENZIP / 7zip handling
 

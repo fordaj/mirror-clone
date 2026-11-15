@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# test.bash - run every check of the project.
+# test.sh - run every check of the project.
 #
 # The checks are:
 #   1. gofmt            the sources have to be formatted
@@ -12,9 +12,9 @@
 #   7. formatting       the sources have to match the formattington config
 #
 # Usage:
-#   ./test.bash              # run every check
-#   ./test.bash --coverage   # also write a coverage profile
-#   ./test.bash --quick      # skip the race detector
+#   ./test.sh              # run every check
+#   ./test.sh --coverage   # also write a coverage profile
+#   ./test.sh --quick      # skip the race detector
 #
 # Environment:
 #   GO_TEST_FLAGS   extra flags passed to "go test"
@@ -34,11 +34,11 @@ FAILURES=0
 
 usage() {
     cat <<EOF
-Usage: ./test.bash [options]
+Usage: ./test.sh [options]
 
 Run every check of the project: gofmt, go vet, go build, go test, a smoke
 test of the built binary, shellcheck of the shell scripts and the formatting
-check of format.bash.
+check of format.sh.
 
 Options:
   --coverage        Write a coverage profile to coverage.out.
@@ -110,7 +110,7 @@ log INFO "$(go version)"
 UNFORMATTED="$(gofmt -l . 2>/dev/null | grep -v '^vendor/' || true)"
 if [[ -n "$UNFORMATTED" ]]; then
     log ERROR "the following files are not formatted (run: gofmt -w .):"
-    printf '%s\n' "$UNFORMATTED" | sed 's/^/test.bash:   /' >&2
+    printf '%s\n' "$UNFORMATTED" | sed 's/^/test.sh:   /' >&2
     FAILURES=$((FAILURES + 1))
 else
     log INFO "gofmt passed"
@@ -167,14 +167,14 @@ if [[ "${SKIP_SHELLCHECK:-false}" == "true" || "${SKIP_SHELLCHECK:-}" == "1" ]];
     log INFO "shellcheck skipped"
 elif command -v shellcheck >/dev/null 2>&1; then
     SCRIPTS=(
-        "$SCRIPT_DIR/build.bash"
-        "$SCRIPT_DIR/release.bash"
-        "$SCRIPT_DIR/test.bash"
-        "$SCRIPT_DIR/run.bash"
-        "$SCRIPT_DIR/format.bash"
+        "$SCRIPT_DIR/build.sh"
+        "$SCRIPT_DIR/release.sh"
+        "$SCRIPT_DIR/test.sh"
+        "$SCRIPT_DIR/run.sh"
+        "$SCRIPT_DIR/format.sh"
         "$SCRIPT_DIR/scripts/entry.sh"
         "$SCRIPT_DIR/scripts/env.sh"
-        "$SCRIPT_DIR/scripts/version.bash"
+        "$SCRIPT_DIR/scripts/version.sh"
     )
     run_check "shellcheck" shellcheck -x "${SCRIPTS[@]}" || true
 else
@@ -188,7 +188,7 @@ if [[ "${SKIP_FORMATTING:-false}" == "true" || "${SKIP_FORMATTING:-}" == "1" ]];
 elif ! command -v uv >/dev/null 2>&1; then
     log WARNING "uv is not installed, skipping the formatting check"
 else
-    run_check "formatting" "$SCRIPT_DIR/format.bash" --check || true
+    run_check "formatting" "$SCRIPT_DIR/format.sh" --check || true
 fi
 
 # --- Result ------------------------------------------------------------------

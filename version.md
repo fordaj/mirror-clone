@@ -4,7 +4,7 @@
 
 ## Build information
 
-`version` (`dev`), `commit` (`none`), `date` (`unknown`) and `mode` (`release`) are package-level variables that `build.bash` overrides with `-ldflags "-X main.version=... -X main.commit=... -X main.date=... -X main.mode=..."` ([build.md](build.md)). `versionString()` formats them for `--version`: `<version> (commit <commit>, built <date>, <mode>, <goos>/<goarch>)`.
+`version` (`dev`), `commit` (`none`), `date` (`unknown`) and `mode` (`release`) are package-level variables that `build.sh` overrides with `-ldflags "-X main.version=... -X main.commit=... -X main.date=... -X main.mode=..."` ([build.md](build.md)). `versionString()` formats them for `--version`: `<version> (commit <commit>, built <date>, <mode>, <goos>/<goarch>)`.
 
 ## Comparison
 

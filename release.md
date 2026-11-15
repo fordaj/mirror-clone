@@ -1,14 +1,14 @@
-# The release flow (`release.bash` + `release.go`)
+# The release flow (`release.sh` + `release.go`)
 
-This page documents the two files behind the release side of the project: the `release.bash` script that builds, packages, tags and publishes a release, and the `release.go` client the tool itself uses to find that release.
+This page documents the two files behind the release side of the project: the `release.sh` script that builds, packages, tags and publishes a release, and the `release.go` client the tool itself uses to find that release.
 
-## `release.bash` — the release pipeline
+## `release.sh` — the release pipeline
 
-Computes the version and tag with the pinned [versioner](tools/versioner/update.md) (via [scripts/version.md](scripts/version.md) and [scripts/entry.md](scripts/entry.md)), cross compiles every platform with [build.bash](build.md), and packages one archive per platform.
+Computes the version and tag with the pinned [versioner](tools/versioner/update.md) (via [scripts/version.md](scripts/version.md) and [scripts/entry.md](scripts/entry.md)), cross compiles every platform with [build.sh](build.md), and packages one archive per platform.
 
 1. Requires a clean working tree (a dirty tree is only tolerated in `--dry-run`), `git`, `gh` authenticated, and a successful `git fetch origin --tags`.
 2. The tag must match `vX.Y.Z...` and must not exist locally or on origin.
-3. Builds with `build.bash --all --release` (unless `--skip-build`).
+3. Builds with `build.sh --all --release` (unless `--skip-build`).
 4. Packages `<RELEASE_DIR>/mirror-clone_<VERSION>_<platform>.zip` (`RELEASE_DIR` defaults to `temp/release`), each containing the binary, the `LICENSE` and the `README.md`. Archives are written with `zip` when available, otherwise with the bundled 7zz (`SEVENZZ_BIN`, from [scripts/env.md](scripts/env.md)) as `7zz a -tzip`.
 5. Writes `checksums.txt` (SHA256, sha256sum format) into the release directory.
 6. Creates the annotated tag, pushes it, and runs `gh release create <TAG> --verify-tag --generate-notes` with the archives attached.

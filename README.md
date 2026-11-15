@@ -116,15 +116,15 @@ cache of the user are never touched.
 
 ## Running the built binary
 
-`run.bash` runs the binary that was built for the current machine. The
+`run.sh` runs the binary that was built for the current machine. The
 platform is resolved with the environment cascade (`scripts/env.sh`), the same
 way the bundled tools are resolved, and every argument is passed straight to
 the binary:
 
 ```bash
-./run.bash --branch main git@github.com:fordaj/AirFrame.git
-./run.bash --help
-DEBUG=true ./run.bash --help        # runs the debug build
+./run.sh --branch main git@github.com:fordaj/AirFrame.git
+./run.sh --help
+DEBUG=true ./run.sh --help        # runs the debug build
 ```
 
 The binary is looked up in this order:
@@ -140,10 +140,10 @@ for logging and the bundled [versioner](https://github.com/fordaj/Versioner)
 to compute the version of the binaries.
 
 ```bash
-./build.bash                # release build for the host platform
-./build.bash --debug        # debug build for the host platform
-./build.bash --all          # release build for every platform
-./build.bash --platform linux-arm64
+./build.sh                # release build for the host platform
+./build.sh --debug        # debug build for the host platform
+./build.sh --all          # release build for every platform
+./build.sh --platform linux-arm64
 ```
 
 The binaries are written to `dist/<platform>/mirror-clone[.exe]`, debug
@@ -166,14 +166,14 @@ which drives the formatters of the project from the configuration in
 | `goimports` | Go sources and their imports |
 
 ```bash
-./format.bash                # format every source of the repository
-./format.bash --check        # change nothing, fail when a file needs formatting
-./format.bash --dry-run      # print the differences, change nothing
-./format.bash --tool shfmt   # run a single formatter
+./format.sh                # format every source of the repository
+./format.sh --check        # change nothing, fail when a file needs formatting
+./format.sh --dry-run      # print the differences, change nothing
+./format.sh --tool shfmt   # run a single formatter
 ```
 
 Formattington is installed with [uv](https://docs.astral.sh/uv/). The
-environment is created automatically by `format.bash`, and can be set up by
+environment is created automatically by `format.sh`, and can be set up by
 hand with:
 
 ```bash
@@ -191,24 +191,24 @@ The formatters themselves have to be installed separately:
 
 The formatters run one after another, because `gofmt` and `goimports` write
 to the same files and would race against each other when they run
-concurrently. `format.bash --parallel` opts out of that.
+concurrently. `format.sh --parallel` opts out of that.
 
 ## Testing
 
 ```bash
-./test.bash                 # gofmt, go vet, go build, go test, smoke test, shellcheck, formatting
-./test.bash --coverage      # also write coverage.out
+./test.sh                 # gofmt, go vet, go build, go test, smoke test, shellcheck, formatting
+./test.sh --coverage      # also write coverage.out
 ```
 
 ## Releasing
 
 ```bash
-./release.bash --dry-run    # show the plan, change nothing
-./release.bash              # build, package, tag and publish
+./release.sh --dry-run    # show the plan, change nothing
+./release.sh              # build, package, tag and publish
 ```
 
-`release.bash` computes the version and the tag with `versioner`, cross
-compiles every platform with `build.bash`, packages the binary, the `LICENSE`
+`release.sh` computes the version and the tag with `versioner`, cross
+compiles every platform with `build.sh`, packages the binary, the `LICENSE`
 and the `README.md` into one archive per platform, creates the annotated tag,
 pushes it and uploads the archives to the GitHub release of that tag.
 

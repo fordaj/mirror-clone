@@ -1,11 +1,11 @@
-# Running the built binary (`run.bash`)
+# Running the built binary (`run.sh`)
 
-`run.bash` runs the mirror-clone binary that was built for the current machine. The platform is resolved with the environment cascade ([scripts/env.md](scripts/env.md)), the same way the bundled tools are resolved, and every argument is passed straight to the binary.
+`run.sh` runs the mirror-clone binary that was built for the current machine. The platform is resolved with the environment cascade ([scripts/env.md](scripts/env.md)), the same way the bundled tools are resolved, and every argument is passed straight to the binary.
 
 ```bash
-./run.bash --branch main git@github.com:fordaj/AirFrame.git
-./run.bash --help
-DEBUG=true ./run.bash --help        # runs the debug build
+./run.sh --branch main git@github.com:fordaj/AirFrame.git
+./run.sh --help
+DEBUG=true ./run.sh --help        # runs the debug build
 ```
 
 ## Lookup order

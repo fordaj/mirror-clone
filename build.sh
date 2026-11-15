@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 #
-# build.bash - cross compile the mirror-clone binary.
+# build.sh - cross compile the mirror-clone binary.
 #
 # The binary is built from the Go sources in this repository. Release builds
 # are the default (optimized, stripped, version stamped), debug builds keep
 # the symbols and the debug information of the compiler.
 #
 # Usage:
-#   ./build.bash                        # release build for the host platform
-#   ./build.bash --debug                # debug build for the host platform
-#   ./build.bash --all                  # release build for every platform
-#   ./build.bash --platform linux-arm64 # release build for one platform
+#   ./build.sh                        # release build for the host platform
+#   ./build.sh --debug                # debug build for the host platform
+#   ./build.sh --all                  # release build for every platform
+#   ./build.sh --platform linux-arm64 # release build for one platform
 #
 # Environment:
 #   DEBUG=true        same as --debug
@@ -46,7 +46,7 @@ SUPPORTED_PLATFORMS=(
 
 usage() {
     cat <<EOF
-Usage: ./build.bash [options]
+Usage: ./build.sh [options]
 
 Cross compile the $APP_NAME binary.
 
@@ -256,7 +256,7 @@ log INFO "platforms: ${TARGETS[*]}"
 
 VERSION="dev"
 if [[ -x "${VERSIONER_BIN:-}" ]]; then
-    version_output="$("$SCRIPT_DIR/scripts/version.bash" --format text)" || die "could not compute the version"
+    version_output="$("$SCRIPT_DIR/scripts/version.sh" --format text)" || die "could not compute the version"
     VERSION="$(printf '%s\n' "$version_output" | sed -n 's/^VERSION=//p' | tail -1)"
     [[ -n "$VERSION" ]] || die "could not parse VERSION from the versioner output"
 else

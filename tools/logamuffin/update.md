@@ -6,7 +6,7 @@
 
 ```text
 tools/logamuffin/
-  update.bash                     # refresh from fordaj/logamuffin releases
+  update.sh                     # refresh from fordaj/logamuffin releases
   v0.1.3.0.35/
     macos-arm64/logamuffin
     macos-x86_64/logamuffin
@@ -16,7 +16,7 @@ tools/logamuffin/
     windows-x86_64/logamuffin.exe
 ```
 
-## `update.bash` in detail
+## `update.sh` in detail
 
 The `.7z` bundle family: assets are `*_<os>-<arch>.7z` archives plus `checksums.txt`, so a `7z`/`7zz` binary is required for a real update (the vendored one under `tools/7zip/` works). The script:
 
@@ -26,7 +26,7 @@ The `.7z` bundle family: assets are `*_<os>-<arch>.7z` archives plus `checksums.
 4. Swaps in the new version directory and deletes superseded `v*` folders only after the new one is fully staged — a failed download leaves the previous bundle intact.
 5. Smoke-tests the host binary (`logamuffin --version`); a version that contains neither the tag nor `${TAG#v}` only warns.
 
-Environment overrides: `LOGAMUFFIN_REPO`, `LOGAMUFFIN_TAG`. `--dry-run` lists assets and planned removals without touching anything; `--help` shows usage. Prerequisites: `gh`, and `7z`/`7zz` for the real update. `update.bash` sources [scripts/entry.sh](../../scripts/entry.md) and can run from anywhere.
+Environment overrides: `LOGAMUFFIN_REPO`, `LOGAMUFFIN_TAG`. `--dry-run` lists assets and planned removals without touching anything; `--help` shows usage. Prerequisites: `gh`, and `7z`/`7zz` for the real update. `update.sh` sources [scripts/entry.sh](../../scripts/entry.md) and can run from anywhere.
 
 ## Related pages
 
