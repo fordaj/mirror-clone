@@ -27,7 +27,7 @@ tools/<name>/
 | [barnacle](barnacle/update.md) | Renders this documentation site | [update.sh](barnacle/update.md) |
 | [7zip](7zip/update.md) | Vendored 7-Zip binaries (zip/7z archive creation) | [update.sh](7zip/update.md) |
 
-The pinned versions (in `scripts/.common.env`): versioner `v0.0.3.0.5`, logamuffin `v0.1.3.0.35`, runner-spawner `v0.0.1.2.6`, barnacle `v0.0.1.0.5`, 7zip `v26.06`.
+The pinned versions (in `scripts/.common.env`): versioner `v0.0.3.0.5`, logamuffin `v0.1.3.0.35`, runner-spawner `v0.0.1.2.6`, barnacle `v0.0.1.0.17`, 7zip `v26.06`.
 
 `scripts/.common.env` and `scripts/.<platform>.env` select these via `*_VERSION_DIR`/`*_BIN`; see [env.md](../scripts/env.md). Archives are platform-native (`.tar.gz` on macOS/Linux, `.zip` on Windows) for barnacle and runner-spawner; versioner and logamuffin still ship legacy `.7z` archives; 7zip ships `.tar.xz` for macOS/Linux and a bare `7zr.exe` for Windows.
 
