@@ -1,6 +1,6 @@
 # The versioner bundle (`tools/versioner/`)
 
-[Versioner](https://github.com/fordaj/Versioner) computes the repository version (the tag) from the git history and `.versioner.json` — the same computation the builds and the release use, so a local build and the published tag can never drift apart. It is consumed by [scripts/version.sh](../../scripts/version.md), [build.sh](../../build.md) and [release.sh](../../release.md).
+[Versioner](https://github.com/fordaj/Versioner) computes the repository version (the tag) from the git history and `.versioner.json` — the same computation the builds and the release use, so a local build and the published tag can never drift apart. It is consumed by [scripts/version.sh](../../scripts/version.md), [build.sh](../../scripts/build.md) and [release.sh](../../scripts/release.md).
 
 ## Layout
 
@@ -33,4 +33,4 @@ Environment overrides: `VERSIONER_REPO`, `VERSIONER_TAG`. `--dry-run` lists asse
 
 - [../README.md](../README.md) — the bundle index
 - [../../scripts/version.md](../../scripts/version.md) — the consumer of the binary
-- [../../build.md](../../build.md) · [../../release.md](../../release.md)
+- [../../build.md](../../scripts/build.md) · [../../release.md](../../scripts/release.md)

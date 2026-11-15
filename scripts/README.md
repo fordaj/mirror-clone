@@ -14,11 +14,11 @@ Vernacular used in the headers (`log INFO`, `$REPO_ROOT_DIR`, `VERSIONER_BIN`): 
 
 - [version.sh](version.md) — print the repository version computed by versioner (`--format text|shell|json`).
 - [docs.sh](docs.md) — generate the documentation site you are reading, with the bundled barnacle.
-- [../build.md](../build.md) — cross compile the binary for the supported platforms.
-- [../release.md](../release.md) — version, cross compile, package, tag, and publish the GitHub release.
-- [../test.md](../test.md) — run every check of the project.
-- [../run.md](../run.md) — run the binary that was built for this machine.
-- [../format.md](../format.md) — format the sources with formattington.
+- [build.sh](build.md) — cross compile the binary for the supported platforms.
+- [release.sh](release.md) — version, cross compile, package, tag, and publish the GitHub release.
+- [test.sh](test.md) — run every check of the project.
+- [run.sh](run.md) — run the binary that was built for this machine.
+- [format.sh](format.md) — format the sources with formattington.
 
 ## Related pages
 

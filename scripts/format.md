@@ -1,14 +1,14 @@
-# Formatting (`format.sh`)
+# Formatting (`scripts/format.sh`)
 
-`format.sh` formats the sources of the repository with [formattington](https://github.com/fordaj/formattington), driven by the configuration in `.formattington.json`: `prettier` (Markdown, JSON), `shfmt -i 4` (shell), `taplo` (TOML), `gofmt` and `goimports` (Go).
+`scripts/format.sh` formats the sources of the repository with [formattington](https://github.com/fordaj/formattington), driven by the configuration in `.formattington.json`: `prettier` (Markdown, JSON), `shfmt -i 4` (shell), `taplo` (TOML), `gofmt` and `goimports` (Go).
 
 ## Usage
 
 ```bash
-./format.sh                # format every source of the repository
-./format.sh --check        # change nothing, exit 1 when a file needs formatting
-./format.sh --dry-run      # print the differences, change nothing
-./format.sh --tool shfmt   # run a single formatter
+./scripts/format.sh                # format every source of the repository
+./scripts/format.sh --check        # change nothing, exit 1 when a file needs formatting
+./scripts/format.sh --dry-run      # print the differences, change nothing
+./scripts/format.sh --tool shfmt   # run a single formatter
 ```
 
 Options: `--check`, `--dry-run`, `--tool TOOL` (the arguments of the tool are read from `.formattington.json`, so a single tool runs exactly as in a full run), `--parallel` (concurrent; not safe while gofmt and goimports are both configured, so the default is `--series`), `--verbose`. Environment: `FORMATTINGTON_CONFIG_PATH`, `UV_PROJECT`.
@@ -21,10 +21,10 @@ The tool itself is installed with [uv](https://docs.astral.sh/uv/) (`uv run --pr
 
 Exit codes are formattington's: `0` success, `1` a file needs formatting (`--check`) or a formatter failed, `2` usage error, `127` a formatter is not installed.
 
-Prerequisites: `uv`, and the formatters of the project (`prettier`/`shfmt` from npm and the Go toolchain, `taplo` from its releases, `gofmt` with Go, `goimports` as above). Sources [scripts/entry.md](scripts/entry.md) for the environment cascade.
+Prerequisites: `uv`, and the formatters of the project (`prettier`/`shfmt` from npm and the Go toolchain, `taplo` from its releases, `gofmt` with Go, `goimports` as above). Sources [scripts/entry.md](entry.md) for the environment cascade.
 
 ## Related pages
 
-- [test.md](test.md) — runs this as the formatting check
-- [scripts/entry.md](scripts/entry.md) · [scripts/env.md](scripts/env.md)
-- [README.md](README.md) — the formatting section
+- [scripts/test.md](test.md) — runs this as the formatting check
+- [scripts/entry.md](entry.md) · [scripts/env.md](env.md)
+- [README.md](../README.md) — the formatting section

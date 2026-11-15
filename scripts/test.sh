@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# test.sh - run every check of the project.
+# scripts/test.sh - run every check of the project.
 #
 # The checks are:
 #   1. gofmt            the sources have to be formatted
@@ -12,9 +12,9 @@
 #   7. formatting       the sources have to match the formattington config
 #
 # Usage:
-#   ./test.sh              # run every check
-#   ./test.sh --coverage   # also write a coverage profile
-#   ./test.sh --quick      # skip the race detector
+#   ./scripts/test.sh              # run every check
+#   ./scripts/test.sh --coverage   # also write a coverage profile
+#   ./scripts/test.sh --quick      # skip the race detector
 #
 # Environment:
 #   GO_TEST_FLAGS   extra flags passed to "go test"
@@ -34,11 +34,11 @@ FAILURES=0
 
 usage() {
     cat <<EOF
-Usage: ./test.sh [options]
+Usage: ./scripts/test.sh [options]
 
 Run every check of the project: gofmt, go vet, go build, go test, a smoke
 test of the built binary, shellcheck of the shell scripts and the formatting
-check of format.sh.
+check of scripts/format.sh.
 
 Options:
   --coverage        Write a coverage profile to coverage.out.

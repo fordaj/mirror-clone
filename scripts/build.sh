@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 #
-# build.sh - cross compile the mirror-clone binary.
+# scripts/build.sh - cross compile the mirror-clone binary.
 #
 # The binary is built from the Go sources in this repository. Release builds
 # are the default (optimized, stripped, version stamped), debug builds keep
 # the symbols and the debug information of the compiler.
 #
 # Usage:
-#   ./build.sh                        # release build for the host platform
-#   ./build.sh --debug                # debug build for the host platform
-#   ./build.sh --all                  # release build for every platform
-#   ./build.sh --platform linux-arm64 # release build for one platform
+#   ./scripts/build.sh                        # release build for the host platform
+#   ./scripts/build.sh --debug                # debug build for the host platform
+#   ./scripts/build.sh --all                  # release build for every platform
+#   ./scripts/build.sh --platform linux-arm64 # release build for one platform
 #
 # Environment:
 #   DEBUG=true        same as --debug
@@ -46,7 +46,7 @@ SUPPORTED_PLATFORMS=(
 
 usage() {
     cat <<EOF
-Usage: ./build.sh [options]
+Usage: ./scripts/build.sh [options]
 
 Cross compile the $APP_NAME binary.
 

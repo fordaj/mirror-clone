@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 #
-# release.sh - build, package and publish a GitHub release.
+# scripts/release.sh - build, package and publish a GitHub release.
 #
 # The version and the tag of the release are computed by versioner, so the
 # tag always matches the history of the repository. Every platform is cross
-# compiled by build.sh and packaged into one archive that contains the
+# compiled by scripts/build.sh and packaged into one archive that contains the
 # binary, the LICENSE and the README.md. The archives are uploaded to the
 # GitHub release of the tag.
 #
 # Usage:
-#   ./release.sh                # build, package, tag and publish
-#   ./release.sh --dry-run      # verify everything, change nothing
-#   ./release.sh --skip-build   # use the binaries that are already in dist/
+#   ./scripts/release.sh                # build, package, tag and publish
+#   ./scripts/release.sh --dry-run      # verify everything, change nothing
+#   ./scripts/release.sh --skip-build   # use the binaries that are already in dist/
 #
 # Prerequisites:
 #   git, gh (authenticated with "gh auth login"), zip (or the bundled 7zz)
@@ -46,10 +46,10 @@ PLATFORMS=(
 
 usage() {
     cat <<EOF
-Usage: ./release.sh [options]
+Usage: ./scripts/release.sh [options]
 
 Build, package and publish a GitHub release. The version and the tag are
-computed by versioner, the binaries are cross compiled by build.sh and
+computed by versioner, the binaries are cross compiled by scripts/build.sh and
 packaged with the LICENSE and the README.md into one archive per platform.
 
 Options:
@@ -237,7 +237,7 @@ ASSETS=()
 for platform in "${PLATFORMS[@]}"; do
     binary="$OUTPUT_DIR/$platform/$APP_NAME"
     [[ -f "$binary" ]] || binary="$OUTPUT_DIR/$platform/$APP_NAME.exe"
-    [[ -f "$binary" ]] || die "no binary for $platform in $OUTPUT_DIR (run ./build.sh --all)"
+    [[ -f "$binary" ]] || die "no binary for $platform in $OUTPUT_DIR (run ./scripts/build.sh --all)"
 
     staging="$RELEASE_DIR/.staging/$platform"
     mkdir -p -- "$staging"

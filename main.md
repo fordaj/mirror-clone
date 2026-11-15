@@ -21,4 +21,4 @@ The clone itself is done by `MirrorCloner` ([mirror.md](mirror.md)) built on `Gi
 - [cli.md](cli.md) — argument parsing and the usage text
 - [mirror.md](mirror.md) — the clone through the mirror cache
 - [logger.md](logger.md) · [url.md](url.md) · [version.md](version.md)
-- [install.md](install.md) · [update.md](update.md) · [release.md](release.md)
+- [install.md](install.md) · [update.md](update.md) · [scripts/release.md](scripts/release.md)

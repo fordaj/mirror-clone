@@ -4,7 +4,7 @@
 
 ## The `updater`
 
-`newUpdater(log, dir, name)` wires the release client (from [release.md](release.md)), an HTTP client with a 30-minute timeout for asset downloads, the install directory, and the version of the running executable (`version`, the build-time variable in [version.md](version.md)).
+`newUpdater(log, dir, name)` wires the release client (from [scripts/release.md](scripts/release.md)), an HTTP client with a 30-minute timeout for asset downloads, the install directory, and the version of the running executable (`version`, the build-time variable in [version.md](version.md)).
 
 ## `Run`
 
@@ -23,7 +23,7 @@ If the download, verification, extraction or replacement fails, the error is ret
 
 ## Related pages
 
-- [release.md](release.md) — the release client and archive selection
+- [scripts/release.md](scripts/release.md) — the release client and archive selection
 - [install.md](install.md) — `replaceFile`, install paths
 - [version.md](version.md) — `compareVersions` and the build-time version
 - [main.md](main.md) — command dispatch

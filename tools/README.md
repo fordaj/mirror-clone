@@ -39,7 +39,7 @@ Layout: `v26.06/{linux-arm,linux-arm64,linux-x64,linux-x86,mac-arm64,mac-x64}/7z
 
 Consumers:
 
-- [`release.sh`](../release.md) uses `SEVENZZ_BIN` as a `zip` replacement (`7zz a -tzip`) to create the release archives when `zip` is not installed.
+- [`release.sh`](../scripts/release.md) uses `SEVENZZ_BIN` as a `zip` replacement (`7zz a -tzip`) to create the release archives when `zip` is not installed.
 - The `.7z` bundle updaters ([versioner](versioner/update.md), [logamuffin](logamuffin/update.md)) need a `7z`/`7zz` on `PATH` — the vendored binaries qualify.
 
 To refresh 7zip, replace the `v26.06` directory with the new upstream release and update `SEVENZIP_VERSION_DIR` in `scripts/.common.env` (and the per-platform paths if the layout changes).
@@ -57,5 +57,5 @@ tools/barnacle/update.sh --dry-run  # show what would change
 
 - [scripts/env.md](../scripts/env.md) — how the cascade selects these binaries
 - [scripts/docs.md](../scripts/docs.md) — barnacle in action
-- [../release.md](../release.md) — the release pipeline (consumes versioner and 7zip)
+- [../release.md](../scripts/release.md) — the release pipeline (consumes versioner and 7zip)
 - [../README.md](../README.md)

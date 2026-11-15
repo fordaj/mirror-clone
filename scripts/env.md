@@ -14,7 +14,7 @@ Everything is exported with `set -a` while sourcing and un-exported at the end (
 
 ### The SEVENZIP / 7zip handling
 
-`SEVENZZ_BIN` is **not** run through `fallback_to_path`. Instead, when it is unset or not executable, `env.sh` probes `7zz` and then `7z` on `PATH`. The bundled variable points at the vendored 7-Zip under `tools/7zip/v26.06/`: `7zz` for macOS/Linux (`mac-arm64/7zz`, `mac-x64/7zz`, `linux-x64/7zz`, `linux-arm64/7zz`) and `7zr.exe` for Windows (`windows/7zr.exe`, 7z format only). Note the 7zip bundle uses its own platform naming, unlike the `<os>-<arch>` layout of the other bundles. 7zip is bundled for the release pipeline ([../release.md](../release.md)) to create the release archives when `zip` is not installed, and by the legacy `.7z` tool updaters.
+`SEVENZZ_BIN` is **not** run through `fallback_to_path`. Instead, when it is unset or not executable, `env.sh` probes `7zz` and then `7z` on `PATH`. The bundled variable points at the vendored 7-Zip under `tools/7zip/v26.06/`: `7zz` for macOS/Linux (`mac-arm64/7zz`, `mac-x64/7zz`, `linux-x64/7zz`, `linux-arm64/7zz`) and `7zr.exe` for Windows (`windows/7zr.exe`, 7z format only). Note the 7zip bundle uses its own platform naming, unlike the `<os>-<arch>` layout of the other bundles. 7zip is bundled for the release pipeline ([../release.md](release.md)) to create the release archives when `zip` is not installed, and by the legacy `.7z` tool updaters.
 
 ## The hidden files
 

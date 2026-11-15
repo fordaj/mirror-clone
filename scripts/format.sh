@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# format.sh - format the sources of the project with formattington.
+# scripts/format.sh - format the sources of the project with formattington.
 #
 # Formattington drives the formatters of the project from the configuration
 # in .formattington.json: prettier, shfmt, taplo, gofmt and goimports. The
@@ -12,10 +12,10 @@
 # concurrently.
 #
 # Usage:
-#   ./format.sh                # format every source of the repository
-#   ./format.sh --check        # change nothing, fail when a file needs formatting
-#   ./format.sh --dry-run      # print the differences, change nothing
-#   ./format.sh --tool shfmt   # run a single formatter
+#   ./scripts/format.sh                # format every source of the repository
+#   ./scripts/format.sh --check        # change nothing, fail when a file needs formatting
+#   ./scripts/format.sh --dry-run      # print the differences, change nothing
+#   ./scripts/format.sh --tool shfmt   # run a single formatter
 #
 # Prerequisites:
 #   uv (https://docs.astral.sh/uv/) and the formatters of the project. The
@@ -41,7 +41,7 @@ TOOL=""
 
 usage() {
     cat <<EOF
-Usage: ./format.sh [options]
+Usage: ./scripts/format.sh [options]
 
 Format the sources of the project with formattington. The formatters and
 their arguments come from .formattington.json.
@@ -197,7 +197,7 @@ case "$STATUS" in
     ;;
 1)
     if [[ "$CHECK" -eq 1 ]]; then
-        log ERROR "some sources are not formatted, run ./format.sh to fix them"
+        log ERROR "some sources are not formatted, run ./scripts/format.sh to fix them"
     else
         log ERROR "a formatter failed, see the output above"
     fi

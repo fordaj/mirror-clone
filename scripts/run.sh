@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# run.sh - run the built mirror-clone binary.
+# scripts/run.sh - run the built mirror-clone binary.
 #
 # The binary is resolved with the environment cascade (scripts/env.sh): the
 # platform env file of the machine decides which build is used, the same way
@@ -8,9 +8,9 @@
 # to the binary.
 #
 # Usage:
-#   ./run.sh --branch main git@github.com:fordaj/AirFrame.git
-#   ./run.sh --help
-#   DEBUG=true ./run.sh --help
+#   ./scripts/run.sh --branch main git@github.com:fordaj/AirFrame.git
+#   ./scripts/run.sh --help
+#   DEBUG=true ./scripts/run.sh --help
 #
 # The build is looked up in this order:
 #   1. $MIRROR_CLONE_BIN

@@ -19,11 +19,11 @@ Sources [entry.md](entry.md) for the cascade and `log()`. If `VERSIONER_BIN` is 
 
 ## Consumers
 
-- `build.sh` — stamps the version into the binaries ([../build.md](../build.md)).
-- `release.sh` — computes the tag of the release ([../release.md](../release.md)).
+- `scripts/build.sh` — stamps the version into the binaries ([../build.md](build.md)).
+- `scripts/release.sh` — computes the tag of the release ([../release.md](release.md)).
 
 ## Related pages
 
 - [entry.md](entry.md) · [env.md](env.md)
-- [../build.md](../build.md) · [../release.md](../release.md)
+- [../build.md](build.md) · [../release.md](release.md)
 - [../tools/versioner/update.md](../tools/versioner/update.md)

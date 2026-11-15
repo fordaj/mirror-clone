@@ -4,7 +4,7 @@
 
 mirror-clone is a cross-platform command-line tool that clones GitHub repositories (and their submodules) through a local cache of mirrors, so repeated clones only transfer the objects that are actually new. It is written in Go (module `github.com/fordaj/MirrorClone`, Go 1.23, no third-party dependencies — the standard library only) and ships as a single, dependency-free binary for Linux, macOS and Windows (x86_64 and arm64).
 
-The binary clones through `~/.mirror-clones` by default, refreshes the mirror on every use (`git fetch --prune`), resolves relative submodule URLs against the superproject, and can install, update and uninstall itself. The release archives are built with `build.sh`/`release.sh` and published to the GitHub releases of `fordaj/MirrorClone`.
+The binary clones through `~/.mirror-clones` by default, refreshes the mirror on every use (`git fetch --prune`), resolves relative submodule URLs against the superproject, and can install, update and uninstall itself. The release archives are built with `scripts/build.sh`/`scripts/release.sh` and published to the GitHub releases of `fordaj/MirrorClone`.
 
 ## Core Principles
 
@@ -19,19 +19,19 @@ The binary clones through `~/.mirror-clones` by default, refreshes the mirror on
 The README is the source of truth for the commands; the real ones are:
 
 ```bash
-./build.sh                # release build of the host platform (dist/<platform>/)
-./build.sh --all          # every platform
-./test.sh                 # gofmt, go vet, go build, go test, smoke test, shellcheck, formatting
-./test.sh --coverage      # also writes coverage.out
-./format.sh               # format the sources (formattington via uv)
-./format.sh --check       # verify only
+./scripts/build.sh                # release build of the host platform (dist/<platform>/)
+./scripts/build.sh --all          # every platform
+./scripts/test.sh                 # gofmt, go vet, go build, go test, smoke test, shellcheck, formatting
+./scripts/test.sh --coverage      # also writes coverage.out
+./scripts/format.sh               # format the sources (formattington via uv)
+./scripts/format.sh --check       # verify only
 ./scripts/version.sh      # print the version computed by versioner
 ./scripts/docs.sh           # regenerate the documentation site (./site/)
 ```
 
 Requirements: the Go toolchain (1.23+), `git`, `uv` for the formatters (`uv sync` installs the locked versions), `gh` for releases and tool refreshes. Tests live next to the code (`*_test.go`, standard `testing` package) and use no network access. Do not invent commands for tools that are not configured.
 
-Before considering a change complete, run `./test.sh`. If you touch any documented file, also run `./scripts/docs.sh` and keep the sibling pages current (see below).
+Before considering a change complete, run `./scripts/test.sh`. If you touch any documented file, also run `./scripts/docs.sh` and keep the sibling pages current (see below).
 
 ## Repository Layout
 
@@ -40,13 +40,9 @@ Before considering a change complete, run `./test.sh`. If you touch any document
                        cli.go, mirror.go, git.go, url.go, version.go, logger.go,
                        install.go, update.go, release.go, main.go, plus the
                        per-platform executable_unix.go / executable_windows.go
-build.sh             cross compilation (six platforms)
-format.sh            formatting via formattington
-release.sh           version, package, tag, publish the GitHub release
-run.sh               run the binary built for this machine
-test.sh              the check suite
-scripts/               entry.sh, env.sh (the cascade), .common.env + .<platform>.env
-                       (hidden), version.sh, docs.sh
+scripts/           task scripts — format.sh, build.sh, release.sh, run.sh, test.sh,
+                       docs.sh, version.sh — plus entry.sh, env.sh (the cascade)
+                       and the hidden .common.env + .<platform>.env. See scripts/README.md
 tools/                 pinned helper bundles (versioner, logamuffin, runner-spawner,
                        barnacle, 7zip) — see tools/README.md
 .formattington.json    formatter configuration
@@ -62,8 +58,8 @@ The repository's documentation is a set of Markdown (`.md`) and Mermaid (`.mmd`)
 
 Layout — documentation lives next to the code it describes:
 
-- One sibling `.md` per root Go file (`cli.go` → [cli.md](cli.md)), plus `main.md` for the entry point. Two deliberate exceptions: one `executable.md` page covers both `executable_unix.go` and `executable_windows.go` (the build-tag pair shares one contract), and one `release.md` page covers both `release.go` and `release.sh` (the stem is taken by both).
-- One sibling `.md` per root bash script (`build.sh` → [build.md](build.md), `format.sh` → [format.md](format.md), `release.sh` → [release.md](release.md), `run.sh` → [run.md](run.md), `test.sh` → [test.md](test.md)).
+- One sibling `.md` per root Go file (`cli.go` → [cli.md](cli.md)), plus `main.md` for the entry point. Two deliberate exceptions: one `executable.md` page covers both `executable_unix.go` and `executable_windows.go` (the build-tag pair shares one contract), and one `scripts/release.md` page covers both `release.go` and `scripts/release.sh` (the stem is taken by both).
+- One sibling `.md` per task script that used to live at the root (`scripts/build.sh` → [scripts/build.md](scripts/build.md), `scripts/format.sh` → [scripts/format.md](scripts/format.md), `scripts/release.sh` → [scripts/release.md](scripts/release.md), `scripts/run.sh` → [scripts/run.md](scripts/run.md), `scripts/test.sh` → [scripts/test.md](scripts/test.md)).
 - One sibling `.md` per script in `scripts/` (`entry.sh` → [entry.md](scripts/entry.md), `env.sh` → [env.md](scripts/env.md), `version.sh` → [version.md](scripts/version.md), `docs.sh` → [docs.md](scripts/docs.md)), plus `scripts/README.md` as the hub.
 - One sibling `.md` per bundle in `tools/` (`tools/<name>/update.md`), plus `tools/README.md` as the hub. The vendored 7zip tree (`tools/7zip/`) has no sibling pages — it is documented inside the hub only.
 - `README.md` stays the project front page; do not restructure it.
@@ -88,5 +84,5 @@ A change is complete when it:
 - Preserves the established CLI contract (commands, flags, exit codes) unless intentionally changed — `cli.go` and the README option table move together.
 - Handles errors without losing the user's work (see the "Never lose work" principle).
 - Remains compatible with the supported platforms (Linux, macOS, Windows × x86_64, arm64) — platform differences go in the `executable_*.go` pair or the environment cascade, not in ad-hoc conditionals.
-- Includes or updates tests where appropriate (`go test ./...` via `./test.sh`).
+- Includes or updates tests where appropriate (`go test ./...` via `./scripts/test.sh`).
 - Updates relevant documentation — including the sibling `.md` pages above for every Go, bash, or tools/ file touched, and the hub listing when a page is added or removed.
