@@ -12,6 +12,10 @@ import (
 // appName is the name of the executable of the tool.
 const appName = "mirror-clone"
 
+// backupSuffix is the suffix of the backup file an update moves the
+// installed executable aside to before replacing it.
+const backupSuffix = ".old"
+
 // installDir returns the directory mirror-clone is installed into on the
 // given platform. home is the home directory of the user and localAppData the
 // value of %LOCALAPPDATA%, which is only used on Windows.
@@ -124,7 +128,7 @@ func replaceFile(target, replacement string) error {
 		return nil
 	}
 
-	backup := target + ".old"
+	backup := target + backupSuffix
 	_ = os.Remove(backup)
 
 	moved := false
@@ -132,7 +136,7 @@ func replaceFile(target, replacement string) error {
 		if moveErr := os.Rename(target, backup); moveErr != nil {
 			// A backup of an earlier update is still in use, so the old
 			// file is moved aside under another name.
-			backup = fmt.Sprintf("%s.%d.old", target, os.Getpid())
+			backup = fmt.Sprintf("%s.%d%s", target, os.Getpid(), backupSuffix)
 			if moveErr := os.Rename(target, backup); moveErr != nil {
 				return fmt.Errorf("replacing %s: %w", target, err)
 			}
@@ -173,7 +177,7 @@ func uninstall(path string) (bool, error) {
 		return false, fmt.Errorf("removing %s: %w", path, err)
 	}
 	// A file that was moved aside by an earlier update is removed as well.
-	_ = os.Remove(path + ".old")
+	_ = os.Remove(path + backupSuffix)
 	return true, nil
 }
 

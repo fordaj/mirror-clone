@@ -17,7 +17,7 @@ flowchart LR
 
 ## The client
 
-`newReleaseClient` targets `https://api.github.com/repos/fordaj/MirrorClone/releases` (constant `releasesURL`) with a 30-second timeout. `latestRelease` lists all releases and `selectLatestRelease` picks the newest that is neither draft nor pre-release, comparing tags with `compareVersions` ([version.go.md](version.go.md)). Both the release feed and the asset downloads in [update.go.md](update.go.md) go through the shared `httpGet` helper: it builds the `GET` request with the `User-Agent` header (and an optional `Accept`), logs the request at debug level, returns the open response, and turns a non-200 status into an error (`unexpected status <status>`; the body is closed first).
+`newReleaseClient` targets `https://api.github.com/repos/fordaj/MirrorClone/releases` (constant `releasesURL`) with a `releaseTimeout` (30-second) timeout. `latestRelease` lists all releases and `selectLatestRelease` picks the newest that is neither draft nor pre-release, comparing tags with `compareVersions` ([version.go.md](version.go.md)). Both the release feed and the asset downloads in [update.go.md](update.go.md) go through the shared `httpGet` helper: it builds the `GET` request with the `User-Agent` header (and an optional `Accept`), logs the request at debug level, returns the open response, and turns a non-200 status into an error (`unexpected status <status>`; the body is closed first).
 
 ## Archive selection
 

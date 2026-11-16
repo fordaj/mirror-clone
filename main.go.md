@@ -29,7 +29,7 @@ The clone itself is done by `MirrorCloner` ([mirror.go.md](mirror.go.md)) built 
 
 ## Exit codes
 
-`2` for argument errors, `1` for runtime failures (the reason is logged), `130` when the context was cancelled (Ctrl-C / SIGTERM, logged as `interrupted`), `0` on success and for `--help`/`--version`.
+`2` for argument errors, `1` for runtime failures (the reason is logged), `exitInterrupted` (`130`, i.e. `128+2`) when the context was cancelled (Ctrl-C / SIGTERM, logged as `interrupted`), `0` on success and for `--help`/`--version`.
 
 ## Related pages
 

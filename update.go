@@ -15,6 +15,10 @@ import (
 	"time"
 )
 
+// downloadTimeout bounds the download of a release archive (which can be
+// large) separately from the API requests.
+const downloadTimeout = 30 * time.Minute
+
 // updater replaces the installed executable with the latest stable release
 // of the repository.
 type updater struct {
@@ -37,7 +41,7 @@ func newUpdater(log *Logger, dir, name string) *updater {
 	return &updater{
 		log:       log,
 		releases:  newReleaseClient(log),
-		client:    &http.Client{Timeout: 30 * time.Minute},
+		client:    &http.Client{Timeout: downloadTimeout},
 		dir:       dir,
 		name:      name,
 		installed: version,

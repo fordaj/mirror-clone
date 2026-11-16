@@ -29,7 +29,7 @@ func removeExecutable(path string) error {
 		return err
 	}
 
-	aside := path + ".old"
+	aside := path + backupSuffix
 	_ = os.Remove(aside)
 	if renameErr := os.Rename(path, aside); renameErr != nil {
 		return err

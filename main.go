@@ -25,6 +25,10 @@ func main() {
 // when the user does not pass -j.
 const maxDefaultJobs = 8
 
+// exitInterrupted is the exit code used when the tool is interrupted
+// (SIGINT/SIGTERM): 128 + 2, like a shell.
+const exitInterrupted = 130
+
 // run contains the whole program logic and returns the exit code.
 func run(args []string) int {
 	opts, err := parseArgs(args)
@@ -98,7 +102,7 @@ func run(args []string) int {
 	}); err != nil {
 		if errors.Is(err, context.Canceled) {
 			log.Errorf("interrupted")
-			return 130
+			return exitInterrupted
 		}
 		log.Errorf("%v", err)
 		return 1
