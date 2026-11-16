@@ -34,7 +34,7 @@ The tool itself is installed with [uv](https://docs.astral.sh/uv/) (`uv run --pr
 
 Exit codes are formattington's: `0` success, `1` a file needs formatting (`--check`) or a formatter failed, `2` usage error, `127` a formatter is not installed.
 
-Prerequisites: `uv`, and the formatters of the project (`prettier`/`shfmt` from npm and the Go toolchain, `taplo` from its releases, `gofmt` with Go, `goimports` as above). Sources [scripts/entry.sh.md](entry.sh.md) for the environment cascade.
+Prerequisites: `uv`, and the formatters of the project (`prettier`/`shfmt` from npm and the Go toolchain, `taplo` from its releases, `gofmt` with Go, `goimports` as above). Sources [scripts/entry.sh.md](entry.sh.md) for the environment cascade and the shared `die`/`need_cmd`.
 
 ## Related pages
 

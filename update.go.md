@@ -38,7 +38,7 @@ If the download, verification, extraction or replacement fails, the error is ret
 
 ## Helpers
 
-`download` (streaming with status check), `verifyChecksum` / `parseChecksums` / `sha256File` (sha256sum format), `extractExecutable` / `writeArchiveEntry` (zip).
+`download` (streaming through the shared `httpGet` helper from [release.go.md](release.go.md), with a status check), `verifyChecksum` / `parseChecksums` / `sha256File` (sha256sum format), `extractExecutable` / `writeArchiveEntry` (zip).
 
 ## Related pages
 

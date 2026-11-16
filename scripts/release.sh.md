@@ -16,7 +16,7 @@ flowchart LR
 
 ## The release pipeline
 
-Computes the version and tag with the pinned `tools/versioner/update.sh.md` (via [version.sh.md](version.sh.md) and [entry.sh.md](entry.sh.md)), cross compiles every platform with [build.sh](build.sh.md), and packages one archive per platform.
+Computes the version and tag with the pinned `tools/versioner/update.sh.md` (via [version.sh.md](version.sh.md) `--format version`/`--format tag` and [entry.sh.md](entry.sh.md)), cross compiles every platform with [build.sh](build.sh.md), and packages one archive per platform. Platforms come from the shared `SUPPORTED_PLATFORMS` of [entry.sh.md](entry.sh.md).
 
 1. Requires a clean working tree (a dirty tree is only tolerated in `--dry-run`), `git`, `gh` authenticated, and a successful `git fetch origin --tags`.
 2. The tag must match `vX.Y.Z...` and must not exist locally or on origin.

@@ -98,14 +98,4 @@ if [[ -z "${SEVENZZ_BIN:-}" || ! -x "${SEVENZZ_BIN:-}" ]]; then
     done
 fi
 
-# source "project.env"
-# case "$(uname -s):$(uname -m)" in
-# Darwin:x86_64) source project.mac-x64.env ;;
-# MINGW*:x86_64 | MSYS*:x86_64 | CYGWIN*:x86_64) source project.win-x64.env ;;
-# Darwin:arm64 | Linux:x86_64 | Linux:aarch64 | *)
-#     echo "Unsupported platform: $(uname -s) $(uname -m)"
-#     exit 1
-#     ;;
-# esac
-
 set +a

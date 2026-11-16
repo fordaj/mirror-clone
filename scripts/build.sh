@@ -36,15 +36,6 @@ CLEAN=0
 ALL=0
 PLATFORM_FLAGS=()
 
-SUPPORTED_PLATFORMS=(
-    linux-x86_64
-    linux-arm64
-    macos-x86_64
-    macos-arm64
-    windows-x86_64
-    windows-arm64
-)
-
 usage() {
     cat <<EOF
 Usage: ./scripts/build.sh [options]
@@ -68,11 +59,6 @@ Environment:
   PLATFORMS            Space separated list of platforms.
   OUTPUT_DIR           Same as --output.
 EOF
-}
-
-die() {
-    log ERROR "$*" || true
-    exit 1
 }
 
 # --- Arguments ---------------------------------------------------------------
@@ -146,10 +132,6 @@ else
 fi
 
 # --- Toolchain ---------------------------------------------------------------
-
-need_cmd() {
-    command -v "$1" >/dev/null 2>&1 || die "required command not found: $1"
-}
 
 need_cmd go
 need_cmd git
@@ -257,9 +239,7 @@ log INFO "platforms: ${TARGETS[*]}"
 
 VERSION="dev"
 if [[ -x "${VERSIONER_BIN:-}" ]]; then
-    version_output="$("$SCRIPT_DIR/version.sh" --format text)" || die "could not compute the version"
-    VERSION="$(printf '%s\n' "$version_output" | sed -n 's/^VERSION=//p' | tail -1)"
-    [[ -n "$VERSION" ]] || die "could not parse VERSION from the versioner output"
+    VERSION="$("$SCRIPT_DIR/version.sh" --format version)" || die "could not compute the version"
 else
     log WARNING "versioner not found, the version is set to dev"
 fi

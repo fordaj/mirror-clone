@@ -64,19 +64,10 @@ Environment:
 EOF
 }
 
-die() {
-    log ERROR "$*" || true
-    exit 1
-}
-
 usage_error() {
     log ERROR "$*" || true
     usage >&2
     exit 2
-}
-
-need_cmd() {
-    command -v "$1" >/dev/null 2>&1 || die "required command not found: $1"
 }
 
 # config_args <tool> prints the arguments of the tool from the configuration

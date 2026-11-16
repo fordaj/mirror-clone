@@ -29,7 +29,7 @@ DEBUG=true ./scripts/run.sh --help        # runs the debug build
 
 The lookup log line goes to **stderr**, so the output of the binary itself stays untouched, and the binary is `exec`'d directly — signals and the exit code are those of the binary.
 
-Prerequisites: a build (see [scripts/build.sh.md](build.sh.md)) and the environment cascade ([scripts/env.sh.md](env.sh.md)).
+Prerequisites: a build (see [scripts/build.sh.md](build.sh.md)) and the environment cascade ([scripts/env.sh.md](env.sh.md)). `die` comes from [scripts/entry.sh.md](entry.sh.md).
 
 ## Related pages
 

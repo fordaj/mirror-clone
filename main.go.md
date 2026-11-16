@@ -25,7 +25,7 @@ flowchart TD
 4. Dispatches the self management commands `install`, `uninstall`, `update` ([install.go.md](install.go.md), [update.go.md](update.go.md)).
 5. Otherwise clones: the cache dir comes from `--mirror-cache-dir`, then `MIRROR_CLONE_MIRROR_CACHE_DIR`, then `~/.mirror-clones` (see `defaultCacheDir`); the repository name is derived with `repoNameFromURL` ([url.go.md](url.go.md)); the destination defaults to the repository name inside the current directory.
 
-The clone itself is done by `MirrorCloner` ([mirror.go.md](mirror.go.md)) built on `Git` ([git.go.md](git.go.md)). `--jobs` defaults to `runtime.NumCPU()`, capped at `8`.
+The clone itself is done by `MirrorCloner` ([mirror.go.md](mirror.go.md)) built on `Git` ([git.go.md](git.go.md)). `--jobs` defaults to `runtime.NumCPU()`, capped at `maxDefaultJobs` (`8`).
 
 ## Exit codes
 

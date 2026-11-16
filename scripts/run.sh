@@ -30,11 +30,6 @@ source "$SCRIPT_DIR/entry.sh"
 
 APP_NAME="mirror-clone"
 
-die() {
-    log ERROR "$*" || true
-    exit 1
-}
-
 # --- Resolve the binary ------------------------------------------------------
 
 PLATFORM="${PROJECT_PLATFORM:-}"

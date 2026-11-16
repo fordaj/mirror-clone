@@ -36,15 +36,6 @@ DRY_RUN=0
 SKIP_BUILD=0
 PUBLISH=1
 
-PLATFORMS=(
-    linux-x86_64
-    linux-arm64
-    macos-x86_64
-    macos-arm64
-    windows-x86_64
-    windows-arm64
-)
-
 usage() {
     cat <<EOF
 Usage: ./scripts/release.sh [options]
@@ -65,15 +56,6 @@ Environment:
   RELEASE_DIR       Directory with the archives (default: $RELEASE_DIR).
   SKIP_BUILD        Same as --skip-build.
 EOF
-}
-
-die() {
-    log ERROR "$*" || true
-    exit 1
-}
-
-need_cmd() {
-    command -v "$1" >/dev/null 2>&1 || die "required command not found: $1"
 }
 
 while [[ $# -gt 0 ]]; do
@@ -170,11 +152,8 @@ if [[ -z "${VERSIONER_BIN:-}" || ! -x "${VERSIONER_BIN:-}" ]]; then
 fi
 log INFO "using versioner: $VERSIONER_BIN"
 
-VERSION_OUTPUT="$("$SCRIPT_DIR/version.sh" --format text)" || die "could not compute the version"
-VERSION="$(printf '%s\n' "$VERSION_OUTPUT" | sed -n 's/^VERSION=//p' | tail -1)"
-TAG="$(printf '%s\n' "$VERSION_OUTPUT" | sed -n 's/^TAG=//p' | tail -1)"
-[[ -n "$VERSION" ]] || die "could not parse VERSION from the versioner output"
-[[ -n "$TAG" ]] || die "could not parse TAG from the versioner output"
+VERSION="$("$SCRIPT_DIR/version.sh" --format version)" || die "could not compute the version"
+TAG="$("$SCRIPT_DIR/version.sh" --format tag)" || die "could not compute the tag"
 if ! [[ "$TAG" =~ ^v[0-9]+(\.[0-9]+)+$ ]]; then
     die "the computed tag looks invalid: '$TAG' (expected vX.Y.Z...)"
 fi
@@ -201,7 +180,7 @@ esac
 
 if [[ "$DRY_RUN" -eq 1 ]]; then
     log INFO "dry run: would package the following archives into $RELEASE_DIR"
-    for platform in "${PLATFORMS[@]}"; do
+    for platform in "${SUPPORTED_PLATFORMS[@]}"; do
         if [[ -f "$OUTPUT_DIR/$platform/$APP_NAME" || -f "$OUTPUT_DIR/$platform/$APP_NAME.exe" ]]; then
             log INFO "  ${APP_NAME}_${VERSION}_$platform.zip (binary present)"
         else
@@ -235,7 +214,7 @@ rm -rf -- "$RELEASE_DIR"
 mkdir -p -- "$RELEASE_DIR"
 
 ASSETS=()
-for platform in "${PLATFORMS[@]}"; do
+for platform in "${SUPPORTED_PLATFORMS[@]}"; do
     binary="$OUTPUT_DIR/$platform/$APP_NAME"
     [[ -f "$binary" ]] || binary="$OUTPUT_DIR/$platform/$APP_NAME.exe"
     [[ -f "$binary" ]] || die "no binary for $platform in $OUTPUT_DIR (run ./scripts/build.sh --all)"

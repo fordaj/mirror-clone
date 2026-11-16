@@ -152,7 +152,7 @@ func (m *MirrorCloner) ensureMirror(ctx context.Context, name, url string) (stri
 // so no objects have to be downloaded twice.
 func (m *MirrorCloner) cloneFromMirror(ctx context.Context, mirror, url, dest string) error {
 	if isDir(dest) && !isEmptyDir(dest) {
-		if !isGitRepo(ctx, m.git, dest) {
+		if !m.git.RunIn(ctx, dest, "rev-parse", "--git-dir") {
 			return fmt.Errorf("destination %s already exists and is not a git repository", dest)
 		}
 		origin, err := m.git.Run(ctx, dest, "remote", "get-url", "origin")
@@ -389,9 +389,4 @@ func isDir(path string) bool {
 func isEmptyDir(path string) bool {
 	entries, err := os.ReadDir(path)
 	return err == nil && len(entries) == 0
-}
-
-// isGitRepo reports whether dir contains a git repository.
-func isGitRepo(ctx context.Context, git *Git, dir string) bool {
-	return git.RunIn(ctx, dir, "rev-parse", "--git-dir")
 }
