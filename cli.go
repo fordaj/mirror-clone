@@ -114,45 +114,35 @@ func parseArgs(args []string) (Options, error) {
 
 		case strings.HasPrefix(arg, "--"):
 			name, value, hasValue := strings.Cut(arg[2:], "=")
-			next := func(flag string) (string, error) {
-				if hasValue {
-					return value, nil
-				}
-				if i+1 >= len(args) {
-					return "", fmt.Errorf("flag --%s requires a value", flag)
-				}
-				i++
-				return args[i], nil
+			next := func() (string, error) {
+				return flagValue(args, &i, hasValue, value, "--"+name)
 			}
 
 			switch name {
 			case "branch":
-				v, err := next(name)
+				v, err := next()
 				if err != nil {
 					return opts, err
 				}
 				opts.Branch = v
 			case "mirror-cache-dir":
-				v, err := next(name)
+				v, err := next()
 				if err != nil {
 					return opts, err
 				}
 				opts.MirrorCacheDir = v
 			case "jobs":
-				v, err := next(name)
+				v, err := next()
 				if err != nil {
 					return opts, err
 				}
-				jobs, err := strconv.Atoi(v)
+				jobs, err := parseJobs(v, "--jobs")
 				if err != nil {
-					return opts, fmt.Errorf("invalid value %q for --jobs: %w", v, err)
-				}
-				if jobs < 1 {
-					return opts, fmt.Errorf("invalid value %q for --jobs: must be at least 1", v)
+					return opts, err
 				}
 				opts.Jobs = jobs
 			case "log-level":
-				v, err := next(name)
+				v, err := next()
 				if err != nil {
 					return opts, err
 				}
@@ -171,31 +161,25 @@ func parseArgs(args []string) (Options, error) {
 			short := arg[1:2]
 			rest := arg[2:]
 			rest = strings.TrimPrefix(rest, "=")
+			next := func() (string, error) {
+				return flagValue(args, &i, rest != "", rest, "-"+short)
+			}
 
 			switch short {
 			case "b":
-				if rest == "" {
-					if i+1 >= len(args) {
-						return opts, fmt.Errorf("flag -b requires a value")
-					}
-					i++
-					rest = args[i]
-				}
-				opts.Branch = rest
-			case "j":
-				if rest == "" {
-					if i+1 >= len(args) {
-						return opts, fmt.Errorf("flag -j requires a value")
-					}
-					i++
-					rest = args[i]
-				}
-				jobs, err := strconv.Atoi(rest)
+				v, err := next()
 				if err != nil {
-					return opts, fmt.Errorf("invalid value %q for -j: %w", rest, err)
+					return opts, err
 				}
-				if jobs < 1 {
-					return opts, fmt.Errorf("invalid value %q for -j: must be at least 1", rest)
+				opts.Branch = v
+			case "j":
+				v, err := next()
+				if err != nil {
+					return opts, err
+				}
+				jobs, err := parseJobs(v, "-j")
+				if err != nil {
+					return opts, err
 				}
 				opts.Jobs = jobs
 			case "q":
@@ -243,4 +227,30 @@ func parseArgs(args []string) (Options, error) {
 	}
 
 	return opts, nil
+}
+
+// flagValue returns the value of a flag. When the value is attached to the
+// flag (--flag=value or -fvalue) it is used as is, otherwise the value is
+// taken from the next argument and i is advanced past it.
+func flagValue(args []string, i *int, hasValue bool, value, flag string) (string, error) {
+	if hasValue {
+		return value, nil
+	}
+	if *i+1 >= len(args) {
+		return "", fmt.Errorf("flag %s requires a value", flag)
+	}
+	*i++
+	return args[*i], nil
+}
+
+// parseJobs parses and validates the value of the --jobs flag.
+func parseJobs(v, flag string) (int, error) {
+	jobs, err := strconv.Atoi(v)
+	if err != nil {
+		return 0, fmt.Errorf("invalid value %q for %s: %w", v, flag, err)
+	}
+	if jobs < 1 {
+		return 0, fmt.Errorf("invalid value %q for %s: must be at least 1", v, flag)
+	}
+	return jobs, nil
 }

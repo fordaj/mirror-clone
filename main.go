@@ -21,6 +21,10 @@ func main() {
 	os.Exit(run(os.Args[1:]))
 }
 
+// maxDefaultJobs caps the number of parallel submodule clones that is used
+// when the user does not pass -j.
+const maxDefaultJobs = 8
+
 // run contains the whole program logic and returns the exit code.
 func run(args []string) int {
 	opts, err := parseArgs(args)
@@ -80,8 +84,8 @@ func run(args []string) int {
 	jobs := opts.Jobs
 	if jobs < 1 {
 		jobs = runtime.NumCPU()
-		if jobs > 8 {
-			jobs = 8
+		if jobs > maxDefaultJobs {
+			jobs = maxDefaultJobs
 		}
 	}
 

@@ -33,17 +33,13 @@ func compareVersions(a, b string) int {
 	partsA := versionParts(a)
 	partsB := versionParts(b)
 
-	count := len(partsA)
-	if len(partsB) > count {
-		count = len(partsB)
-	}
+	count := max(len(partsA), len(partsB))
 
 	for i := 0; i < count; i++ {
-		x := 0
+		x, y := 0, 0
 		if i < len(partsA) {
 			x = partsA[i]
 		}
-		y := 0
 		if i < len(partsB) {
 			y = partsB[i]
 		}

@@ -10,6 +10,8 @@
 #   scripts/version.sh                 # prints "VERSION=<v>" and "TAG=<t>"
 #   scripts/version.sh --format shell  # prints "export VERSION=..." lines
 #   scripts/version.sh --format json   # prints the raw versioner json
+#   scripts/version.sh --format version  # prints only the version
+#   scripts/version.sh --format tag      # prints only the tag
 #
 # Environment:
 #   VERSIONER_BIN        Path to the versioner binary (default: via scripts/env.sh).
@@ -38,13 +40,15 @@ while [[ $# -gt 0 ]]; do
         ;;
     --help | -h)
         cat <<'EOF'
-Usage: scripts/version.sh [--format text|shell|json]
+Usage: scripts/version.sh [--format text|shell|json|version|tag]
 
 Print the version of the repository computed by versioner.
 
-  text   VERSION=<version> and TAG=<tag> lines (default)
-  shell  export VERSION=... and export TAG=... lines
-  json   the raw json document produced by versioner
+  text     VERSION=<version> and TAG=<tag> lines (default)
+  shell    export VERSION=... and export TAG=... lines
+  json     the raw json document produced by versioner
+  version  only the version
+  tag      only the tag
 EOF
         exit 0
         ;;
@@ -91,8 +95,14 @@ shell)
     printf 'export VERSION=%s\n' "$VERSION"
     printf 'export TAG=%s\n' "$TAG"
     ;;
+version)
+    printf '%s\n' "$VERSION"
+    ;;
+tag)
+    printf '%s\n' "$TAG"
+    ;;
 *)
-    log ERROR "unknown format: $FORMAT (expected text, shell or json)"
+    log ERROR "unknown format: $FORMAT (expected text, shell, json, version or tag)"
     exit 2
     ;;
 esac

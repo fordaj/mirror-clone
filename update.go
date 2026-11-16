@@ -122,23 +122,11 @@ func (u *updater) Run(ctx context.Context) error {
 
 // download downloads the file at url into dest.
 func (u *updater) download(ctx context.Context, url, dest string) error {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
-	if err != nil {
-		return fmt.Errorf("building the request: %w", err)
-	}
-	req.Header.Set("User-Agent", appName)
-
-	u.log.Debugf("GET %s", url)
-
-	resp, err := u.client.Do(req)
+	resp, err := httpGet(ctx, u.client, u.log, url, "")
 	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("unexpected status %s", resp.Status)
-	}
 
 	out, err := os.Create(dest)
 	if err != nil {

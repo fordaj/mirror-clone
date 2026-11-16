@@ -59,26 +59,40 @@ func newReleaseClient(log *Logger) *releaseClient {
 	}
 }
 
-// releases returns every release of the repository.
-func (c *releaseClient) releases(ctx context.Context) ([]release, error) {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, c.baseURL, nil)
+// httpGet issues a GET request for url and returns the open response. The
+// caller is responsible for closing the body. A status other than 200 is an
+// error, and the body is closed in that case.
+func httpGet(ctx context.Context, client *http.Client, log *Logger, url, accept string) (*http.Response, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("building the request: %w", err)
 	}
-	req.Header.Set("Accept", "application/vnd.github+json")
+	if accept != "" {
+		req.Header.Set("Accept", accept)
+	}
 	req.Header.Set("User-Agent", appName)
 
-	c.log.Debugf("GET %s", c.baseURL)
+	log.Debugf("GET %s", url)
 
-	resp, err := c.client.Do(req)
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if resp.StatusCode != http.StatusOK {
+		status := resp.Status
+		_ = resp.Body.Close()
+		return nil, fmt.Errorf("unexpected status %s", status)
+	}
+	return resp, nil
+}
+
+// releases returns every release of the repository.
+func (c *releaseClient) releases(ctx context.Context) ([]release, error) {
+	resp, err := httpGet(ctx, c.client, c.log, c.baseURL, "application/vnd.github+json")
 	if err != nil {
 		return nil, fmt.Errorf("querying the releases: %w", err)
 	}
 	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("querying the releases: unexpected status %s", resp.Status)
-	}
 
 	var releases []release
 	if err := json.NewDecoder(resp.Body).Decode(&releases); err != nil {
@@ -160,39 +174,40 @@ func releaseAssetName(version, platform string) string {
 	return fmt.Sprintf("%s_%s_%s.zip", appName, version, platform)
 }
 
-// selectArchive returns the release archive of the platform. The archive of
-// the given version is preferred, but an archive of another version of the
-// same platform is used as well, so a release that names its assets
-// differently can still be installed.
-func selectArchive(assets []asset, version, platform string) (asset, bool) {
-	want := releaseAssetName(version, platform)
+// selectAsset returns the asset named exact, or the first asset matching
+// fallback when no asset carries that name.
+func selectAsset(assets []asset, exact string, fallback func(asset) bool) (asset, bool) {
 	for _, candidate := range assets {
-		if candidate.Name == want {
+		if candidate.Name == exact {
 			return candidate, true
 		}
 	}
-
-	suffix := "_" + platform + ".zip"
 	for _, candidate := range assets {
-		if strings.HasPrefix(candidate.Name, appName+"_") && strings.HasSuffix(candidate.Name, suffix) {
+		if fallback(candidate) {
 			return candidate, true
 		}
 	}
 	return asset{}, false
 }
 
+// selectArchive returns the release archive of the platform. The archive of
+// the given version is preferred, but an archive of another version of the
+// same platform is used as well, so a release that names its assets
+// differently can still be installed.
+func selectArchive(assets []asset, version, platform string) (asset, bool) {
+	if platform == "" {
+		return asset{}, false
+	}
+	suffix := "_" + platform + ".zip"
+	return selectAsset(assets, releaseAssetName(version, platform), func(candidate asset) bool {
+		return strings.HasPrefix(candidate.Name, appName+"_") && strings.HasSuffix(candidate.Name, suffix)
+	})
+}
+
 // selectChecksums returns the asset with the checksums of the release
 // archives.
 func selectChecksums(assets []asset) (asset, bool) {
-	for _, candidate := range assets {
-		if candidate.Name == checksumsName {
-			return candidate, true
-		}
-	}
-	for _, candidate := range assets {
-		if strings.HasSuffix(candidate.Name, checksumsName) {
-			return candidate, true
-		}
-	}
-	return asset{}, false
+	return selectAsset(assets, checksumsName, func(candidate asset) bool {
+		return strings.HasSuffix(candidate.Name, checksumsName)
+	})
 }

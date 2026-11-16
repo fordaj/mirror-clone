@@ -28,7 +28,7 @@ flowchart TD
 3. `checkout` — when `Ref` is set, checks it out; if that fails, fetches the mirror's refs into `refs/remotes/mirror/*` and retries, so commits not reachable from any remote branch still resolve.
 4. `cloneSubmodules` — reads `.gitmodules` via `git config --file .gitmodules --get-regexp` and the recorded gitlink SHAs via `git ls-files --stage` (mode `160000`), then clones each submodule recursively through the same cache, in parallel (bounded by `jobs`), with relative URLs resolved against the superproject URL ([url.go.md](url.go.md)). Submodule errors are collected with `errors.Join`.
 
-`isDir`, `isEmptyDir` and `isGitRepo` are small helpers used by the flow.
+`isDir` and `isEmptyDir` are small helpers used by the flow (the existing-clone check probes with `m.git.RunIn(ctx, dest, "rev-parse", "--git-dir")` directly).
 
 ## Related pages
 

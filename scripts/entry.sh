@@ -5,6 +5,27 @@ ENTRY_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck disable=SC1091
 source "$ENTRY_DIR/env.sh"
 
+# level_number <name-or-number> prints the numeric level of a level name.
+# Numbers are passed through, unknown names map to INFO (20).
+level_number() {
+    local name_upper
+    if [[ "$1" =~ ^-?[0-9]+$ ]]; then
+        printf '%s' "$1"
+        return 0
+    fi
+    name_upper="$(printf '%s' "$1" | tr '[:lower:]' '[:upper:]')"
+    case "$name_upper" in
+    TRACE) printf '5' ;;
+    DEBUG) printf '10' ;;
+    INFO) printf '20' ;;
+    WARNING | WARN) printf '30' ;;
+    ERROR) printf '40' ;;
+    CRITICAL | FATAL) printf '50' ;;
+    ALWAYS) printf -- '-1' ;;
+    *) printf '20' ;;
+    esac
+}
+
 # log LEVEL [MESSAGE ...]
 #   LEVEL may be a word (INFO) or a number (50). When a logamuffin
 #   binary is available all arguments are forwarded to it with
@@ -46,41 +67,13 @@ log() {
         local level_arg="${1:-}"
         shift
         local msg="$*"
-        local level_upper level_value _thr_raw _thr_upper
-        if [[ "$level_arg" =~ ^-?[0-9]+$ ]]; then
-            level_value="$level_arg"
-        else
-            level_upper="$(printf '%s' "$level_arg" | tr '[:lower:]' '[:upper:]')"
-            case "$level_upper" in
-            TRACE) level_value=5 ;;
-            DEBUG) level_value=10 ;;
-            INFO) level_value=20 ;;
-            WARNING | WARN) level_value=30 ;;
-            ERROR) level_value=40 ;;
-            CRITICAL | FATAL) level_value=50 ;;
-            ALWAYS) level_value=-1 ;;
-            *) level_value=20 ;;
-            esac
-        fi
+        local level_value threshold_value _thr_raw
+        level_value="$(level_number "$level_arg")"
         _thr_raw="${LOG_LEVEL:-${LOGAMUFFIN_LEVEL:-INFO}}"
         if [[ -z "$_thr_raw" ]]; then
             _thr_raw="INFO"
         fi
-        if [[ "$_thr_raw" =~ ^-?[0-9]+$ ]]; then
-            local threshold_value="$_thr_raw"
-        else
-            _thr_upper="$(printf '%s' "$_thr_raw" | tr '[:lower:]' '[:upper:]')"
-            case "$_thr_upper" in
-            TRACE) threshold_value=5 ;;
-            DEBUG) threshold_value=10 ;;
-            INFO) threshold_value=20 ;;
-            WARNING | WARN) threshold_value=30 ;;
-            ERROR) threshold_value=40 ;;
-            CRITICAL | FATAL) threshold_value=50 ;;
-            ALWAYS) threshold_value=-1 ;;
-            *) threshold_value=20 ;;
-            esac
-        fi
+        threshold_value="$(level_number "$_thr_raw")"
         if [[ "$level_value" -ne -1 && "$level_value" -lt "$threshold_value" ]]; then
             return 0
         fi
@@ -96,4 +89,27 @@ log() {
     # Preserve `logamuffin`'s exit code (0 success/filtered,
     # 2 usage/config errors) even when `set -e` is active.
     return $?
+}
+
+# SUPPORTED_PLATFORMS lists the platforms the project builds and releases.
+# Shared by scripts/build.sh and scripts/release.sh.
+# shellcheck disable=SC2034
+SUPPORTED_PLATFORMS=(
+    linux-x86_64
+    linux-arm64
+    macos-x86_64
+    macos-arm64
+    windows-x86_64
+    windows-arm64
+)
+
+# die prints the message as an error and exits with 1.
+die() {
+    log ERROR "$*" || true
+    exit 1
+}
+
+# need_cmd fails unless the command is available.
+need_cmd() {
+    command -v "$1" >/dev/null 2>&1 || die "required command not found: $1"
 }
