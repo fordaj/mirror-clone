@@ -8,7 +8,7 @@ source "$ENV_DIR/.common.env"
 
 # --- Resolve the newest bundled tool version ---------------------------
 # .common.env pins one version directory per tool (e.g.
-# tools/versioner/v0.0.3.0.5). When the working tree carries a newer
+# tools/versioner/v0.0.3.0.17). When the working tree carries a newer
 # v* directory, prefer it, so updating a tool bundle does not require
 # editing every platform env file.
 resolve_version_dir() {
@@ -53,7 +53,7 @@ esac
 
 # --- Anchor tool paths to the repository root -------------------------
 # The env files describe the bundles with paths relative to the
-# repository root ("tools/versioner/v0.0.3.0.5/..."). Make them
+# repository root ("tools/versioner/v0.0.3.0.17/..."). Make them
 # absolute so they keep resolving from any working directory.
 REPO_ROOT_DIR="$(cd -- "$ENV_DIR/.." && pwd)"
 absolutize_bin() {

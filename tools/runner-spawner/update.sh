@@ -150,7 +150,7 @@ fi
 log INFO "release tag: $TAG"
 
 # parse_stem_to_platform <stem> sets PLATFORM (e.g.
-# Versioner_v0.0.3.0.5_darwin-arm64 -> macos-arm64) or returns 1 for
+# RunnerSpawner_v0.0.1.2.16_darwin-arm64 -> macos-arm64) or returns 1 for
 # unknown values. Accepts any single separator before the os-arch suffix and
 # normalizes x64 -> x86_64, amd64 -> x86_64, x86_64 -> x86_64, darwin -> macos.
 parse_stem_to_platform() {

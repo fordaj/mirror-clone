@@ -14,14 +14,14 @@ flowchart TD
 
 [runner-spawner](https://github.com/fordaj/runner-spawner) manages self-hosted CI runners. No script in this repository invokes it; it is pinned and resolved like the other bundles so the tooling is there when CI work needs it, and so the bundle layout stays uniform. It reports unsupported on Linux (macOS + Windows only; the Linux binaries are still shipped), and `windows-arm64`/`windows-x86_64` are bundled.
 
-**The bundle was updated to runner-spawner v0.0.1.2.6** (see the git history: "Update runner-spawner to latest version" and "Bump runner-spawner pin to v0.0.1.2.6"). `scripts/.common.env` pins `RUNNER_SPAWNER_VERSION_DIR=tools/runner-spawner/v0.0.1.2.6`; [scripts/env.sh.md](../../scripts/env.sh.md) prefers any newer `v*` directory that shows up in the bundle.
+**The bundle was updated to runner-spawner v0.0.1.2.16** (see the git history: "Update runner-spawner to latest version" and "Bump runner-spawner pin to v0.0.1.2.16"). `scripts/.common.env` pins `RUNNER_SPAWNER_VERSION_DIR=tools/runner-spawner/v0.0.1.2.16`; [scripts/env.sh.md](../../scripts/env.sh.md) prefers any newer `v*` directory that shows up in the bundle.
 
 ## Layout
 
 ```text
 tools/runner-spawner/
   update.sh                     # refresh from fordaj/runner-spawner releases
-  v0.0.1.2.6/
+  v0.0.1.2.16/
     macos-arm64/runner-spawner
     macos-x86_64/runner-spawner
     linux-arm64/runner-spawner
@@ -32,7 +32,7 @@ tools/runner-spawner/
 
 ## `update.sh` in detail
 
-The platform-native archive family (like barnacle, unlike versioner/logamuffin): assets are `*.tar.gz` (macOS/Linux), `*.zip` (Windows) or legacy `.7z`, carrying the tag and the `<os>-<arch>` pair separated by either `_` or `-`. The script:
+The platform-native archive family (like barnacle and versioner, unlike logamuffin): assets are `*.tar.gz` (macOS/Linux), `*.zip` (Windows) or legacy `.7z`, carrying the tag and the `<os>-<arch>` pair separated by either `_` or `-`. The script:
 
 1. Resolves the tag (latest release, or `--tag vX.Y.Z...`), validating the tag shape.
 2. Downloads via `gh`, then verifies every downloaded archive against `checksums.txt` or `SHA256SUMS.txt` (`shasum -a 256 -c` or `sha256sum -c`, verifying only the archives downloaded for this run). A mismatch, or a missing entry for a downloaded asset, is fatal — **this updater refuses to install unverified binaries**.
