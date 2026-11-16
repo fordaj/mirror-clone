@@ -1,5 +1,18 @@
 # mirror-clone
 
+```mermaid
+flowchart TD
+    URL["git@github.com:org/repo.git"] --> Name["repoNameFromURL<br/>name + collision disambiguation"]
+    Name --> Cache["mirror cache<br/>~/.mirror-clones/‹name›.git<br/>git clone --mirror · fetch --prune on reuse"]
+    Cache -->|"git clone --reference --dissociate"| WC["working copy<br/>objects copied · cache removable"]
+    WC --> Subs["every submodule<br/>same flow · recursive · parallel"]
+    Subs --> Cache
+    click Name href "url.go.md"
+    click Cache href "mirror.go.md"
+    click WC href "mirror.go.md"
+    click Subs href "mirror.go.md"
+```
+
 Clones repositories and their submodules through a local cache of mirrors, so
 repeated clones only transfer the objects that are actually new.
 
@@ -214,7 +227,7 @@ pushes it and uploads the archives to the GitHub release of that tag.
 
 ## Documentation
 
-The documentation is written in Markdown next to the code and rendered into a static site by barnacle. See [AGENTS.md](AGENTS.md) for the conventions and the list of pages, and run `./scripts/docs.sh` to regenerate the site into `site/`.
+The documentation is written in Markdown next to the code and rendered into a static site by barnacle. Pages keep the documented file's suffix (`mirror.go` → `mirror.go.md`, `scripts/docs.sh` → `scripts/docs.sh.md`) and open with a Mermaid diagram — the diagram nodes and edges link to the pages they describe, so the site is explorable by diagram alone. See [AGENTS.md](AGENTS.md) for the conventions and the list of pages, and run `./scripts/docs.sh` to regenerate the site into `site/`.
 
 ## License
 

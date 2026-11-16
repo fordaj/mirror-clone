@@ -1,5 +1,19 @@
 # Removing the executable (`executable_unix.go` + `executable_windows.go`)
 
+```mermaid
+flowchart TD
+    Uninst["mirror-clone uninstall"] --> Rem["removeExecutable(path)"]
+    Rem -->|"!windows build tag"| Unix["os.Remove — unlink a running binary is fine"]
+    Rem -->|"windows build tag"| Win["os.Remove"]
+    Win -->|"ERROR_SHARING_VIOLATION · ERROR_LOCK_VIOLATION"| Old["rename to path.old<br/>delete by hand after exit"]
+    Win -->|"any other error"| Fail["return the error unchanged"]
+    Unix --> Done["removed"]
+    Old --> Done
+    click Uninst href "install.go.md"
+    click Old href "update.go.md"
+    click Fail href "install.go.md"
+```
+
 `removeExecutable(path)` deletes the installed executable. It is the one piece of the self-management flow that differs between platforms, so it lives in two files selected by build tag.
 
 ## `executable_unix.go` (`//go:build !windows`)
@@ -10,11 +24,11 @@ Just `os.Remove(path)`. On Unix systems a running executable can be removed — 
 
 Windows locks a running executable, so `os.Remove` can fail with `ERROR_SHARING_VIOLATION` (32) or `ERROR_LOCK_VIOLATION` (33) — matched by `isFileLocked` via `errors.As` on `syscall.Errno`. In that case the file is renamed to `path + ".old"` (a leftover `.old` is removed first) and the function returns an error message telling the user the file was moved aside and has to be removed by hand once the program is closed. Any other error is returned unchanged.
 
-The split exists for the uninstall path; the update path handles the same locking case in `replaceFile` ([install.md](install.md)). Uninstall also removes a leftover `.old` file.
+The split exists for the uninstall path; the update path handles the same locking case in `replaceFile` ([install.go.md](install.go.md)). Uninstall also removes a leftover `.old` file.
 
 One page covers both files because the contract (`removeExecutable(path string) error`) is identical and the Windows file is the only difference; see AGENTS.md.
 
 ## Related pages
 
-- [install.md](install.md) — the uninstall flow that calls this
-- [update.md](update.md) — the update flow with its own locking workaround
+- [install.go.md](install.go.md) — the uninstall flow that calls this
+- [update.go.md](update.go.md) — the update flow with its own locking workaround
