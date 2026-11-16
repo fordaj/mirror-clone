@@ -12,6 +12,9 @@ import (
 // releasesURL is the endpoint of the releases of the repository.
 const releasesURL = "https://api.github.com/repos/fordaj/MirrorClone/releases"
 
+// releaseTimeout bounds a request to the GitHub API.
+const releaseTimeout = 30 * time.Second
+
 // checksumsName is the name of the asset with the checksums of the release
 // archives.
 const checksumsName = "checksums.txt"
@@ -54,7 +57,7 @@ type releaseClient struct {
 func newReleaseClient(log *Logger) *releaseClient {
 	return &releaseClient{
 		baseURL: releasesURL,
-		client:  &http.Client{Timeout: 30 * time.Second},
+		client:  &http.Client{Timeout: releaseTimeout},
 		log:     log,
 	}
 }

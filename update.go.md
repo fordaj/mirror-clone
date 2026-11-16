@@ -23,7 +23,7 @@ flowchart TD
 
 ## The `updater`
 
-`newUpdater(log, dir, name)` wires the release client (from [scripts/release.sh.md](scripts/release.sh.md)), an HTTP client with a 30-minute timeout for asset downloads, the install directory, and the version of the running executable (`version`, the build-time variable in [version.go.md](version.go.md)).
+`newUpdater(log, dir, name)` wires the release client (from [scripts/release.sh.md](scripts/release.sh.md)), an HTTP client with a `downloadTimeout` (30-minute) timeout for asset downloads, the install directory, and the version of the running executable (`version`, the build-time variable in [version.go.md](version.go.md)).
 
 ## `Run`
 

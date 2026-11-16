@@ -22,7 +22,7 @@ flowchart TD
 
 ## Install flow
 
-`runInstall` resolves the directory, finds the running executable with `os.Executable()`, and calls `install(source, dir, name)`, which creates the directory (`0755`) and copies through `copyExecutable`: write to a temporary file in the target directory first, `chmod 0755`, then `replaceFile` into place atomically — a failed copy never leaves a broken executable. `replaceFile` renames in one step; on Windows a locked target is moved aside to `target.old` (or `target.<pid>.old`) first and restored if the replacement fails. After installing, the command warns when the directory is not on `PATH` and prints the line to add — the shell configuration is never changed (`pathInstructions`).
+`runInstall` resolves the directory, finds the running executable with `os.Executable()`, and calls `install(source, dir, name)`, which creates the directory (`0755`) and copies through `copyExecutable`: write to a temporary file in the target directory first, `chmod 0755`, then `replaceFile` into place atomically — a failed copy never leaves a broken executable. `replaceFile` renames in one step; on Windows a locked target is moved aside to `target.old` (or `target.<pid>.old`) first and restored if the replacement fails. The `.old` suffix is the shared `backupSuffix` constant used by `uninstall` and by the Windows path ([executable.md](executable.md)). After installing, the command warns when the directory is not on `PATH` and prints the line to add — the shell configuration is never changed (`pathInstructions`).
 
 ## Uninstall flow
 

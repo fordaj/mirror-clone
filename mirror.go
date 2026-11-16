@@ -10,6 +10,10 @@ import (
 	"sync"
 )
 
+// gitlinkMode is the index mode git uses for submodule entries
+// (a "gitlink", see git ls-files --stage).
+const gitlinkMode = "160000"
+
 // CloneRequest describes a single clone operation.
 type CloneRequest struct {
 	// Name is the name used for the mirror cache entry. It defaults to the
@@ -74,9 +78,6 @@ func (m *MirrorCloner) Clone(ctx context.Context, req CloneRequest) error {
 		name = repoNameFromURL(req.URL)
 	}
 
-	if err := os.MkdirAll(filepath.Dir(req.Dest), 0o755); err != nil {
-		return fmt.Errorf("creating parent directory of %s: %w", req.Dest, err)
-	}
 	if err := os.MkdirAll(req.Dest, 0o755); err != nil {
 		return fmt.Errorf("creating %s: %w", req.Dest, err)
 	}
@@ -152,22 +153,7 @@ func (m *MirrorCloner) ensureMirror(ctx context.Context, name, url string) (stri
 // so no objects have to be downloaded twice.
 func (m *MirrorCloner) cloneFromMirror(ctx context.Context, mirror, url, dest string) error {
 	if isDir(dest) && !isEmptyDir(dest) {
-		if !m.git.RunIn(ctx, dest, "rev-parse", "--git-dir") {
-			return fmt.Errorf("destination %s already exists and is not a git repository", dest)
-		}
-		origin, err := m.git.Run(ctx, dest, "remote", "get-url", "origin")
-		if err != nil {
-			return fmt.Errorf("reading origin of %s: %w", dest, err)
-		}
-		if !sameURL(origin, url) {
-			return fmt.Errorf("destination %s already contains a clone of %s", dest, origin)
-		}
-		m.log.Infof("Updating existing clone %s", dest)
-		if _, err := m.git.Run(ctx, dest, "fetch", "--prune", "origin"); err != nil {
-			return fmt.Errorf("updating %s: %w", dest, err)
-		}
-		m.fastForward(ctx, dest)
-		return nil
+		return m.updateExistingClone(ctx, url, dest)
 	}
 
 	m.log.Infof("Cloning %s from %s", dest, mirror)
@@ -178,6 +164,28 @@ func (m *MirrorCloner) cloneFromMirror(ctx context.Context, mirror, url, dest st
 	if _, err := m.git.Run(ctx, "", "clone", "--reference", mirror, "--dissociate", url, dest); err != nil {
 		return fmt.Errorf("cloning %s: %w", url, err)
 	}
+	return nil
+}
+
+// updateExistingClone refreshes the clone of url that dest already holds:
+// it fetches and fast-forwards instead of re-cloning. A non-git or foreign
+// destination is an error; local changes are never discarded.
+func (m *MirrorCloner) updateExistingClone(ctx context.Context, url, dest string) error {
+	if !m.git.RunIn(ctx, dest, "rev-parse", "--git-dir") {
+		return fmt.Errorf("destination %s already exists and is not a git repository", dest)
+	}
+	origin, err := m.git.Run(ctx, dest, "remote", "get-url", "origin")
+	if err != nil {
+		return fmt.Errorf("reading origin of %s: %w", dest, err)
+	}
+	if !sameURL(origin, url) {
+		return fmt.Errorf("destination %s already contains a clone of %s", dest, origin)
+	}
+	m.log.Infof("Updating existing clone %s", dest)
+	if _, err := m.git.Run(ctx, dest, "fetch", "--prune", "origin"); err != nil {
+		return fmt.Errorf("updating %s: %w", dest, err)
+	}
+	m.fastForward(ctx, dest)
 	return nil
 }
 
@@ -295,42 +303,7 @@ func (m *MirrorCloner) readSubmodules(ctx context.Context, repoPath string) ([]S
 		return nil, nil
 	}
 
-	type entry struct {
-		path string
-		url  string
-	}
-	entries := map[string]*entry{}
-	var order []string
-
-	for _, line := range strings.Split(out, "\n") {
-		key, value, ok := strings.Cut(line, " ")
-		if !ok {
-			continue
-		}
-		key = strings.TrimPrefix(key, "submodule.")
-		idx := strings.LastIndex(key, ".")
-		if idx <= 0 {
-			continue
-		}
-		name, field := key[:idx], key[idx+1:]
-		switch field {
-		case "path", "url":
-		default:
-			continue
-		}
-		current, ok := entries[name]
-		if !ok {
-			current = &entry{}
-			entries[name] = current
-			order = append(order, name)
-		}
-		if field == "path" {
-			current.path = value
-		} else {
-			current.url = value
-		}
-	}
-
+	entries, order := parseGitmodules(out)
 	if len(order) == 0 {
 		return nil, nil
 	}
@@ -357,6 +330,62 @@ func (m *MirrorCloner) readSubmodules(ctx context.Context, repoPath string) ([]S
 	return submodules, nil
 }
 
+// submoduleConfig holds the path and url of one submodule of .gitmodules,
+// as reported by git config.
+type submoduleConfig struct {
+	path string
+	url  string
+}
+
+// parseGitmodules parses the output of
+//
+//	git config --file .gitmodules --get-regexp '^submodule\..*\.(path|url)$'
+//
+// into the configuration of every submodule, keeping the order in which git
+// reports them.
+func parseGitmodules(out string) (map[string]*submoduleConfig, []string) {
+	entries := map[string]*submoduleConfig{}
+	var order []string
+
+	for _, line := range strings.Split(out, "\n") {
+		name, field, value, ok := splitGitmodulesLine(line)
+		if !ok {
+			continue
+		}
+		current, ok := entries[name]
+		if !ok {
+			current = &submoduleConfig{}
+			entries[name] = current
+			order = append(order, name)
+		}
+		if field == "path" {
+			current.path = value
+		} else {
+			current.url = value
+		}
+	}
+	return entries, order
+}
+
+// splitGitmodulesLine parses one "submodule.<name>.<field> <value>" line of
+// the git config output. The field must be path or url.
+func splitGitmodulesLine(line string) (name, field, value string, ok bool) {
+	key, value, found := strings.Cut(line, " ")
+	if !found {
+		return "", "", "", false
+	}
+	key = strings.TrimPrefix(key, "submodule.")
+	idx := strings.LastIndex(key, ".")
+	if idx <= 0 {
+		return "", "", "", false
+	}
+	name, field = key[:idx], key[idx+1:]
+	if field != "path" && field != "url" {
+		return "", "", "", false
+	}
+	return name, field, value, true
+}
+
 // gitlinkSHAs maps submodule paths to the commit recorded in the index.
 func (m *MirrorCloner) gitlinkSHAs(ctx context.Context, repoPath string) (map[string]string, error) {
 	out, err := m.git.Run(ctx, repoPath, "ls-files", "--stage")
@@ -371,7 +400,7 @@ func (m *MirrorCloner) gitlinkSHAs(ctx context.Context, repoPath string) (map[st
 			continue
 		}
 		fields := strings.Fields(meta)
-		if len(fields) < 3 || fields[0] != "160000" {
+		if len(fields) < 3 || fields[0] != gitlinkMode {
 			continue
 		}
 		shas[path] = fields[1]
