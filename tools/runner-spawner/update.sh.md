@@ -2,14 +2,24 @@
 
 ```mermaid
 flowchart TD
-    Args["update.sh [--dry-run · --tag TAG]"] --> Tag["resolve tag<br/>latest release or --tag · validated"]
-    Tag --> DL["gh release download<br/>platform-native tar.gz / zip (.7z legacy)"]
-    DL --> Sum["verify SHA256 vs checksums.txt<br/>REFUSES to install unverified binaries"]
-    Sum --> Map["stem → platform<br/>darwin·macos · x64·amd64·x86_64 · optional -lite/-full stripped"]
-    Map --> Ext["tar / unzip / 7zz → vTAG/PLATFORM<br/>binary at root or one level deep"]
-    Ext --> Swap["swap: mv staging → vTAG<br/>then delete superseded v* folders"]
-    Swap --> Smoke["smoke: runner-spawner --version"]
+    Args("<img src='barnacle:keyboard.svg' width='20' alt=''/><br/>update.sh [--dry-run · --tag TAG]") --> Tag("<img src='barnacle:tag.svg' width='20' alt=''/><br/>resolve tag<br/>latest release or --tag · validated")
+    Tag --> DL("<img src='barnacle:download.svg' width='20' alt=''/><br/>gh release download<br/>platform-native tar.gz / zip (.7z legacy)")
+    DL --> Sum("<img src='barnacle:check.svg' width='20' alt=''/><br/>verify SHA256 vs checksums.txt<br/>REFUSES to install unverified binaries")
+    Sum --> Map("<img src='barnacle:funnel.svg' width='20' alt=''/><br/>stem → platform<br/>darwin·macos · x64·amd64·x86_64 · optional -lite/-full stripped")
+    Map --> Ext("<img src='barnacle:package.svg' width='20' alt=''/><br/><u>tar / unzip / 7zz → vTAG/PLATFORM<br/>binary at root or one level deep</u>")
+    Ext --> Swap("<img src='barnacle:folder.svg' width='20' alt=''/><br/>swap: mv staging → vTAG<br/>then delete superseded v* folders")
+    Swap --> Smoke("<img src='barnacle:check.svg' width='20' alt=''/><br/>smoke: runner-spawner --version")
     click Ext href "../barnacle/update.sh.md"
+    class Tag tagNode
+    class DL dlNode
+    class Sum,Smoke checkNode
+    class Ext boxNode
+    class Swap folder
+    classDef tagNode fill:#f6b8d4,stroke:#be185d,color:#500724
+    classDef dlNode fill:#93e2e2,stroke:#0f766e,color:#042f2e
+    classDef checkNode fill:#9fe8c9,stroke:#0f766e,color:#052e22
+    classDef boxNode fill:#e8cf9d,stroke:#a16207,color:#33240a
+    classDef folder fill:#f0c558,stroke:#8a6d1c,color:#332a05
 ```
 
 [runner-spawner](https://github.com/fordaj/runner-spawner) manages self-hosted CI runners. No script in this repository invokes it; it is pinned and resolved like the other bundles so the tooling is there when CI work needs it, and so the bundle layout stays uniform. It reports unsupported on Linux (macOS + Windows only; the Linux binaries are still shipped), and `windows-arm64`/`windows-x86_64` are bundled.

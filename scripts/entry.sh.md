@@ -2,12 +2,16 @@
 
 ```mermaid
 flowchart LR
-    Script["every repository script"] --> Entry["entry.sh — source, never execute"]
-    Entry --> Env["env.sh.md<br/>the environment cascade"]
-    Entry --> Log["log LEVEL MESSAGE…"]
-    Log -->|"LOGAMUFFIN_BIN set and executable"| La["pinned logamuffin binary<br/>LOG_SOURCE = file:line passed through"]
-    Log -->|"binary missing (fresh clone)"| Pf["printf fallback<br/>same severities, same routing"]
+    Script("<img src='barnacle:terminal.svg' width='20' alt=''/><br/>every repository script") --> Entry("<img src='barnacle:terminal.svg' width='20' alt=''/><br/>entry.sh — source, never execute")
+    Entry --> Env("<img src='barnacle:file-text.svg' width='20' alt=''/><br/><u>env.sh.md<br/>the environment cascade</u>")
+    Entry --> Log("<img src='barnacle:scroll-text.svg' width='20' alt=''/><br/>log LEVEL MESSAGE…")
+    Log -->|"LOGAMUFFIN_BIN set and executable"| La("<img src='barnacle:square-terminal.svg' width='20' alt=''/><br/>pinned logamuffin binary<br/>LOG_SOURCE = file:line passed through")
+    Log -->|"binary missing (fresh clone)"| Pf("<img src='barnacle:terminal.svg' width='20' alt=''/><br/>printf fallback<br/>same severities, same routing")
     click Env href "env.sh.md"
+    class Entry shFile
+    class Env mdFile
+    classDef shFile fill:#abe07a,stroke:#3f6212,color:#16280a
+    classDef mdFile fill:#dcd6ce,stroke:#6b6255,color:#292524
 ```
 
 Every repository script sources `scripts/entry.sh` instead of the individual cascade files, because it does two jobs at once:

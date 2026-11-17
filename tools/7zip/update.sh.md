@@ -2,12 +2,22 @@
 
 ```mermaid
 flowchart TD
-    Args["update.sh [--dry-run · --tag TAG]"] --> Tag["resolve tag<br/>latest release or --tag · numeric dot-separated shape"]
-    Tag --> DL["gh release download<br/>7zNNNN-*.tar.xz · 7zNNNN-mac.tar.xz · 7zr.exe"]
-    DL --> Digest["verify SHA256 against the<br/>per-asset digest GitHub publishes<br/>asset without a digest → fatal"]
-    Digest --> Ext["extract (tar -xJf) → vTAG/PLATFORM<br/>full upstream payload kept"]
-    Ext --> Swap["swap: mv staging → vTAG<br/>then delete superseded v* folders"]
-    Swap --> Smoke["smoke: banner check — warn only"]
+    Args("<img src='barnacle:keyboard.svg' width='20' alt=''/><br/>update.sh [--dry-run · --tag TAG]") --> Tag("<img src='barnacle:tag.svg' width='20' alt=''/><br/>resolve tag<br/>latest release or --tag · numeric dot-separated shape")
+    Tag --> DL("<img src='barnacle:download.svg' width='20' alt=''/><br/>gh release download<br/>7zNNNN-*.tar.xz · 7zNNNN-mac.tar.xz · 7zr.exe")
+    DL --> Digest("<img src='barnacle:check.svg' width='20' alt=''/><br/>verify SHA256 against the<br/>per-asset digest GitHub publishes<br/>asset without a digest → fatal")
+    Digest --> Ext("<img src='barnacle:package.svg' width='20' alt=''/><br/>extract (tar -xJf) → vTAG/PLATFORM<br/>full upstream payload kept")
+    Ext --> Swap("<img src='barnacle:folder.svg' width='20' alt=''/><br/>swap: mv staging → vTAG<br/>then delete superseded v* folders")
+    Swap --> Smoke("<img src='barnacle:check.svg' width='20' alt=''/><br/>smoke: banner check — warn only")
+    class Tag tagNode
+    class DL dlNode
+    class Digest,Smoke checkNode
+    class Ext boxNode
+    class Swap folder
+    classDef tagNode fill:#f6b8d4,stroke:#be185d,color:#500724
+    classDef dlNode fill:#93e2e2,stroke:#0f766e,color:#042f2e
+    classDef checkNode fill:#9fe8c9,stroke:#0f766e,color:#052e22
+    classDef boxNode fill:#e8cf9d,stroke:#a16207,color:#33240a
+    classDef folder fill:#f0c558,stroke:#8a6d1c,color:#332a05
 ```
 
 [7-Zip](https://www.7-zip.org/) is a free file archiver. mirror-clone vendors the upstream console builds so the release pipeline can create `zip` archives without a system `zip`, and so the legacy `.7z` tool updaters have a `7z`/`7zz` on hand. The upstream release is mirrored as a GitHub release at [ip7z/7zip](https://github.com/ip7z/7zip), which is what `update.sh` downloads from.

@@ -2,21 +2,31 @@
 
 ```mermaid
 flowchart TD
-    Run["runUpdate"] --> Chk{"installed?"}
-    Chk -->|"<a href='install.go.md'>no — not installed</a>"| NotInst["tell the user to run<br/>mirror-clone install"]
-    Chk -->|"yes"| Latest["latestRelease<br/>newest non-draft, non-prerelease"]
-    Latest --> Cmp{"compareVersions(available, installed)"}
-    Cmp -->|"0"| UTD["up to date · return"]
-    Cmp -->|"installed newer"| Warn["warn — never downgrade · return"]
-    Cmp -->|"available newer"| Pick["platformName · selectArchive<br/>selectChecksums"]
-    Pick --> DL["download archive + checksums.txt<br/>into a temp dir inside the install dir"]
-    DL --> Verify["verifyChecksum — SHA256, sha256sum format"]
-    Verify --> Ext["extractExecutable → mode 0755"]
-    Ext --> Repl["replaceFile — atomic, from install.go"]
-    Repl --> Done["updated"]
+    Run("<img src='barnacle:file-code.svg' width='20' alt=''/><br/>runUpdate") --> Chk{{"<img src='barnacle:hexagon.svg' width='20' alt=''/><br/>installed?"}}
+    Chk -->|"<a href='install.go.md'>no — not installed</a>"| NotInst("<img src='barnacle:info.svg' width='20' alt=''/><br/>tell the user to run<br/>mirror-clone install")
+    Chk -->|"yes"| Latest("<img src='barnacle:tag.svg' width='20' alt=''/><br/><u>latestRelease<br/>newest non-draft, non-prerelease</u>")
+    Latest --> Cmp{{"<img src='barnacle:hexagon.svg' width='20' alt=''/><br/><u>compareVersions(available, installed)</u>"}}
+    Cmp -->|"0"| UTD("<img src='barnacle:check.svg' width='20' alt=''/><br/>up to date · return")
+    Cmp -->|"installed newer"| Warn("<img src='barnacle:triangle-exclamation-point.svg' width='20' alt=''/><br/>warn — never downgrade · return")
+    Cmp -->|"available newer"| Pick("<img src='barnacle:package-check.svg' width='20' alt=''/><br/>platformName · selectArchive<br/>selectChecksums")
+    Pick --> DL("<img src='barnacle:download.svg' width='20' alt=''/><br/>download archive + checksums.txt<br/>into a temp dir inside the install dir")
+    DL --> Verify("<img src='barnacle:check.svg' width='20' alt=''/><br/>verifyChecksum — SHA256, sha256sum format")
+    Verify --> Ext("<img src='barnacle:package.svg' width='20' alt=''/><br/>extractExecutable → mode 0755")
+    Ext --> Repl("<img src='barnacle:file-diff.svg' width='20' alt=''/><br/><u>replaceFile — atomic, from install.go</u>")
+    Repl --> Done("<img src='barnacle:check.svg' width='20' alt=''/><br/>updated")
     click Latest href "release.go.md"
     click Cmp href "version.go.md"
     click Repl href "install.go.md"
+    class Chk,Cmp hexNode
+    class Latest tagNode
+    class UTD,Verify,Done checkNode
+    class Pick,Ext boxNode
+    class DL dlNode
+    classDef hexNode fill:#ffe08a,stroke:#a16207,color:#422006
+    classDef tagNode fill:#f6b8d4,stroke:#be185d,color:#500724
+    classDef checkNode fill:#9fe8c9,stroke:#0f766e,color:#052e22
+    classDef boxNode fill:#e8cf9d,stroke:#a16207,color:#33240a
+    classDef dlNode fill:#93e2e2,stroke:#0f766e,color:#042f2e
 ```
 
 `update.go` implements `mirror-clone update`: replace the installed executable with the latest stable release of [fordaj/MirrorClone](https://github.com/fordaj/MirrorClone).

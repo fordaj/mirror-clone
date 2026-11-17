@@ -2,16 +2,20 @@
 
 ```mermaid
 flowchart LR
-    Index["tools/ — pinned helper bundles"] --> Barnacle["barnacle<br/>renders this documentation site"]
-    Index --> Versioner["versioner<br/>computes the repository version"]
-    Index --> Loga["logamuffin<br/>log() backend for the scripts"]
-    Index --> RS["runner-spawner<br/>self-hosted CI runners"]
-    Index --> Z["7zip<br/>archive creation fallback"]
+    Index("<img src='barnacle:folder.svg' width='20' alt=''/><br/>tools/ — pinned helper bundles") --> Barnacle("<img src='barnacle:book-open.svg' width='20' alt=''/><br/><u>barnacle<br/>renders this documentation site</u>")
+    Index --> Versioner("<img src='barnacle:git-commit-horizontal.svg' width='20' alt=''/><br/><u>versioner<br/>computes the repository version</u>")
+    Index --> Loga("<img src='barnacle:scroll-text.svg' width='20' alt=''/><br/><u>logamuffin<br/>log() backend for the scripts</u>")
+    Index --> RS("<img src='barnacle:server.svg' width='20' alt=''/><br/><u>runner-spawner<br/>self-hosted CI runners</u>")
+    Index --> Z("<img src='barnacle:package.svg' width='20' alt=''/><br/><u>7zip<br/>archive creation fallback</u>")
     click Barnacle href "barnacle/update.sh.md"
     click Versioner href "versioner/update.sh.md"
     click Loga href "logamuffin/update.sh.md"
     click RS href "runner-spawner/update.sh.md"
     click Z href "7zip/update.sh.md"
+    class Index folder
+    class Z boxNode
+    classDef folder fill:#f0c558,stroke:#8a6d1c,color:#332a05
+    classDef boxNode fill:#e8cf9d,stroke:#a16207,color:#33240a
 ```
 
 `tools/` carries the repository's pinned helper binaries — build, release, logging, docs and archiving tooling — plus one `update.sh` per tool that refreshes them. They are not dependencies of the mirror-clone binary itself; they are the tools used to build, test, log and document this repository.

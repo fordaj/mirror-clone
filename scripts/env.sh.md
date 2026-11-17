@@ -2,16 +2,20 @@
 
 ```mermaid
 flowchart TD
-    Src["sourced by entry.sh.md<br/>(never executed directly)"] --> Loc["locate the cascade via BASH_SOURCE<br/>works from any cwd"]
-    Loc --> Common[".common.env<br/>TOOLS_DIR · upstream repos · pinned *_VERSION_DIR"]
-    Loc --> Plat[".linux-arm64.env, …<br/>PROJECT_PLATFORM · BINs"]
-    Common --> Resolve["resolve_version_dir<br/>newest bundled v* wins over the pin"]
+    Src("<img src='barnacle:file-text.svg' width='20' alt=''/><br/><u>sourced by entry.sh.md<br/>(never executed directly)</u>") --> Loc("<img src='barnacle:terminal.svg' width='20' alt=''/><br/>locate the cascade via BASH_SOURCE<br/>works from any cwd")
+    Loc --> Common("<img src='barnacle:terminal.svg' width='20' alt=''/><br/>.common.env<br/>TOOLS_DIR · upstream repos · pinned *_VERSION_DIR")
+    Loc --> Plat("<img src='barnacle:terminal.svg' width='20' alt=''/><br/>.linux-arm64.env, …<br/>PROJECT_PLATFORM · BINs")
+    Common --> Resolve("<img src='barnacle:terminal.svg' width='20' alt=''/><br/>resolve_version_dir<br/>newest bundled v* wins over the pin")
     Plat --> Resolve
-    Resolve --> Abs["absolutize_bin against REPO_ROOT_DIR"]
-    Abs --> Fallback["fallback_to_path when the bundled binary is missing"]
-    Fallback --> Bins["VERSIONER_BIN · LOGAMUFFIN_BIN · RUNNER_SPAWNER_BIN<br/>BARNACLE_BIN · SEVENZZ_BIN"]
+    Resolve --> Abs("<img src='barnacle:terminal.svg' width='20' alt=''/><br/>absolutize_bin against REPO_ROOT_DIR")
+    Abs --> Fallback("<img src='barnacle:corner-down-right.svg' width='20' alt=''/><br/>fallback_to_path when the bundled binary is missing")
+    Fallback --> Bins("<img src='barnacle:list.svg' width='20' alt=''/><br/><u>VERSIONER_BIN · LOGAMUFFIN_BIN · RUNNER_SPAWNER_BIN<br/>BARNACLE_BIN · SEVENZZ_BIN</u>")
     click Src href "entry.sh.md"
     click Bins href "docs.sh.md"
+    class Src mdFile
+    class Common,Plat shFile
+    classDef mdFile fill:#dcd6ce,stroke:#6b6255,color:#292524
+    classDef shFile fill:#abe07a,stroke:#3f6212,color:#16280a
 ```
 
 `scripts/env.sh` is the plumbing that makes the pinned helper tools resolvable from any script, in any working directory, on every supported platform. It is sourced — never executed.

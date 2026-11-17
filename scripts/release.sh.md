@@ -2,14 +2,22 @@
 
 ```mermaid
 flowchart LR
-    Clean["clean tree required<br/>(--dry-run tolerates dirty)"] --> Tag["versioner computes vX.Y.Z…<br/>tag must not exist locally or on origin"]
-    Tag -->|"<a href='build.sh.md'>build.sh --all --release</a>"| Build["build.sh --all --release<br/>(--skip-build reuses dist/)"]
-    Build --> Pack["mirror-clone_VERSION_PLATFORM.zip × 6<br/>binary + LICENSE + README.md"]
-    Pack --> Sum["checksums.txt — SHA256, sha256sum format"]
-    Sum --> GH["annotated tag → push<br/>gh release create --verify-tag --generate-notes"]
-    GH --> Tools["zip, else the vendored 7zz<br/>(7zz a -tzip)"]
+    Clean("<img src='barnacle:check.svg' width='20' alt=''/><br/>clean tree required<br/>(--dry-run tolerates dirty)") --> Tag("<img src='barnacle:tag.svg' width='20' alt=''/><br/><u>versioner computes vX.Y.Z…<br/>tag must not exist locally or on origin</u>")
+    Tag -->|"<a href='build.sh.md'>build.sh --all --release</a>"| Build("<img src='barnacle:terminal.svg' width='20' alt=''/><br/>build.sh --all --release<br/>(--skip-build reuses dist/)")
+    Build --> Pack("<img src='barnacle:package.svg' width='20' alt=''/><br/><u>mirror-clone_VERSION_PLATFORM.zip × 6<br/>binary + LICENSE + README.md</u>")
+    Pack --> Sum("<img src='barnacle:check.svg' width='20' alt=''/><br/>checksums.txt — SHA256, sha256sum format")
+    Sum --> GH("<img src='barnacle:tag.svg' width='20' alt=''/><br/>annotated tag → push<br/>gh release create --verify-tag --generate-notes")
+    GH --> Tools("<img src='barnacle:archive.svg' width='20' alt=''/><br/>zip, else the vendored 7zz<br/>(7zz a -tzip)")
     click Tag href "version.sh.md"
     click Pack href "../release.go.md"
+    class Clean,Sum checkNode
+    class Tag,GH tagNode
+    class Build shFile
+    class Pack,Tools boxNode
+    classDef checkNode fill:#9fe8c9,stroke:#0f766e,color:#052e22
+    classDef tagNode fill:#f6b8d4,stroke:#be185d,color:#500724
+    classDef shFile fill:#abe07a,stroke:#3f6212,color:#16280a
+    classDef boxNode fill:#e8cf9d,stroke:#a16207,color:#33240a
 ```
 
 `scripts/release.sh` builds, packages, tags and publishes a release. The client the tool itself uses to read that release back is [release.go](../release.go.md); this page covers the pipeline that produces it.

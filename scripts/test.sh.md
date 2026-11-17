@@ -2,18 +2,26 @@
 
 ```mermaid
 flowchart LR
-    Start["test.sh<br/>exit 1 if any check fails"] --> G["1 · gofmt -l ."]
-    G --> V["2 · go vet ./..."]
-    V --> B["3 · go build ./..."]
-    B --> T["4 · go test -count=1 ./...<br/>(-race with CGO · --quick skips)"]
-    T --> S["5 · smoke: --version --help"]
-    S --> SC["6 · shellcheck (skip if absent)"]
-    SC --> F["7 · format.sh --check (skip if no uv)"]
-    F --> R{"all green?"}
-    R -->|"yes"| Ok["exit 0"]
-    R -->|"no"| Bad["exit 1"]
+    Start("<img src='barnacle:terminal.svg' width='20' alt=''/><br/>test.sh<br/>exit 1 if any check fails") --> G("<img src='barnacle:check.svg' width='20' alt=''/><br/>1 · gofmt -l .")
+    G --> V("<img src='barnacle:check.svg' width='20' alt=''/><br/>2 · go vet ./...")
+    V --> B("<img src='barnacle:hammer.svg' width='20' alt=''/><br/><u>3 · go build ./...</u>")
+    B --> T("<img src='barnacle:flask-conical.svg' width='20' alt=''/><br/>4 · go test -count=1 ./...<br/>(-race with CGO · --quick skips)")
+    T --> S("<img src='barnacle:check.svg' width='20' alt=''/><br/>5 · smoke: --version --help")
+    S --> SC("<img src='barnacle:check.svg' width='20' alt=''/><br/>6 · shellcheck (skip if absent)")
+    SC --> F("<img src='barnacle:check.svg' width='20' alt=''/><br/><u>7 · format.sh --check (skip if no uv)</u>")
+    F --> R{{"<img src='barnacle:hexagon.svg' width='20' alt=''/><br/>all green?"}}
+    R -->|"yes"| Ok("<img src='barnacle:check.svg' width='20' alt=''/><br/>exit 0")
+    R -->|"no"| Bad("<img src='barnacle:circle-exclamation-point.svg' width='20' alt=''/><br/>exit 1")
     click F href "format.sh.md"
     click B href "build.sh.md"
+    class Start shFile
+    class G,V,T,S,SC,F,Ok checkNode
+    class R hexNode
+    class Bad errNode
+    classDef shFile fill:#abe07a,stroke:#3f6212,color:#16280a
+    classDef checkNode fill:#9fe8c9,stroke:#0f766e,color:#052e22
+    classDef hexNode fill:#ffe08a,stroke:#a16207,color:#422006
+    classDef errNode fill:#f6b8b8,stroke:#b91c1c,color:#450a0a
 ```
 
 `scripts/test.sh` runs every check of the project and exits `1` when at least one of them failed. The checks, in order:

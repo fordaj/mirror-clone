@@ -2,15 +2,19 @@
 
 ```mermaid
 flowchart TD
-    URL["git@github.com:org/repo.git"] --> Name["repoNameFromURL<br/>name + collision disambiguation"]
-    Name --> Cache["mirror cache<br/>~/.mirror-clones/‹name›.git<br/>git clone --mirror · fetch --prune on reuse"]
-    Cache -->|"git clone --reference --dissociate"| WC["working copy<br/>objects copied · cache removable"]
-    WC --> Subs["every submodule<br/>same flow · recursive · parallel"]
+    URL("<img src='barnacle:globe.svg' width='20' alt=''/><br/>git@github.com:org/repo.git") --> Name("<img src='barnacle:file-code.svg' width='20' alt=''/><br/><u>repoNameFromURL<br/>name + collision disambiguation</u>")
+    Name --> Cache("<img src='barnacle:folder.svg' width='20' alt=''/><br/><u>mirror cache<br/>~/.mirror-clones/‹name›.git<br/>git clone --mirror · fetch --prune on reuse</u>")
+    Cache -->|"git clone --reference --dissociate"| WC("<img src='barnacle:folder.svg' width='20' alt=''/><br/><u>working copy<br/>objects copied · cache removable</u>")
+    WC --> Subs("<img src='barnacle:git-fork.svg' width='20' alt=''/><br/><u>every submodule<br/>same flow · recursive · parallel</u>")
     Subs --> Cache
     click Name href "url.go.md"
     click Cache href "mirror.go.md"
     click WC href "mirror.go.md"
     click Subs href "mirror.go.md"
+    class Name goFile
+    class Cache,WC folder
+    classDef goFile fill:#8fd8ef,stroke:#0277a8,color:#08303d
+    classDef folder fill:#f0c558,stroke:#8a6d1c,color:#332a05
 ```
 
 Clones repositories and their submodules through a local cache of mirrors, so

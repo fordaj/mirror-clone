@@ -2,16 +2,22 @@
 
 ```mermaid
 flowchart TD
-    Inst["mirror-clone install"] --> Dir["installDir<br/>~/.local/bin · %LOCALAPPDATA%\Programs\mirror-clone"]
-    Dir --> Copy["copyExecutable<br/>temp file in the target dir · chmod 0755"]
-    Copy --> Replace["replaceFile — atomic rename<br/>Windows: locked target moved aside to .old first"]
-    Replace --> Path{"on PATH?"}
-    Path -->|"no"| Print["print the line to add<br/>shell config never changed"]
-    Path -->|"yes"| Done["installed"]
-    Un["mirror-clone uninstall"] --> Rem["removeExecutable + leftover .old"]
-    Rem --> Rmdir["removeDirIfEmpty — only when empty"]
+    Inst("<img src='barnacle:download.svg' width='20' alt=''/><br/>mirror-clone install") --> Dir("<img src='barnacle:folder.svg' width='20' alt=''/><br/>installDir<br/>~/.local/bin · %LOCALAPPDATA%\Programs\mirror-clone")
+    Dir --> Copy("<img src='barnacle:copy.svg' width='20' alt=''/><br/>copyExecutable<br/>temp file in the target dir · chmod 0755")
+    Copy --> Replace("<img src='barnacle:file-code.svg' width='20' alt=''/><br/><u>replaceFile — atomic rename<br/>Windows: locked target moved aside to .old first</u>")
+    Replace --> Path{{"<img src='barnacle:hexagon.svg' width='20' alt=''/><br/>on PATH?"}}
+    Path -->|"no"| Print("<img src='barnacle:terminal.svg' width='20' alt=''/><br/>print the line to add<br/>shell config never changed")
+    Path -->|"yes"| Done("<img src='barnacle:check.svg' width='20' alt=''/><br/>installed")
+    Un("<img src='barnacle:trash.svg' width='20' alt=''/><br/>mirror-clone uninstall") --> Rem("<img src='barnacle:file-x.svg' width='20' alt=''/><br/><u>removeExecutable + leftover .old</u>")
+    Rem --> Rmdir("<img src='barnacle:folder-minus.svg' width='20' alt=''/><br/>removeDirIfEmpty — only when empty")
     click Replace href "update.go.md"
     click Rem href "executable.md"
+    class Dir folder
+    class Path hexNode
+    class Done checkNode
+    classDef folder fill:#f0c558,stroke:#8a6d1c,color:#332a05
+    classDef hexNode fill:#ffe08a,stroke:#a16207,color:#422006
+    classDef checkNode fill:#9fe8c9,stroke:#0f766e,color:#052e22
 ```
 
 `install.go` implements `mirror-clone install` and `mirror-clone uninstall`: copying the running executable into a per-user directory and removing it again.

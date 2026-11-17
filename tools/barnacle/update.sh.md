@@ -2,13 +2,23 @@
 
 ```mermaid
 flowchart TD
-    Args["update.sh [--dry-run · --tag TAG · --repo REPO]"] --> Tag["resolve tag<br/>latest release or --tag · validated vX.Y.Z…"]
-    Tag --> DL["gh release download<br/>barnacle-PLATFORM.tar.gz / .zip + checksums.txt"]
-    DL --> Sum["verify SHA256 of the downloaded archives<br/>missing entry for a downloaded asset → fatal"]
-    Sum --> Ext["extract → STAGE_DIR/PLATFORM<br/>binary at archive root or one level deep"]
-    Ext --> Lic["LICENSE at root or one level deep<br/>→ copied per platform"]
-    Lic --> Swap["swap: mv staging → vTAG<br/>then delete superseded v* folders"]
-    Swap --> Smoke["smoke: barnacle --version<br/>warn only on mismatch"]
+    Args("<img src='barnacle:keyboard.svg' width='20' alt=''/><br/>update.sh [--dry-run · --tag TAG · --repo REPO]") --> Tag("<img src='barnacle:tag.svg' width='20' alt=''/><br/>resolve tag<br/>latest release or --tag · validated vX.Y.Z…")
+    Tag --> DL("<img src='barnacle:download.svg' width='20' alt=''/><br/>gh release download<br/>barnacle-PLATFORM.tar.gz / .zip + checksums.txt")
+    DL --> Sum("<img src='barnacle:check.svg' width='20' alt=''/><br/>verify SHA256 of the downloaded archives<br/>missing entry for a downloaded asset → fatal")
+    Sum --> Ext("<img src='barnacle:package.svg' width='20' alt=''/><br/>extract → STAGE_DIR/PLATFORM<br/>binary at archive root or one level deep")
+    Ext --> Lic("<img src='barnacle:file-text.svg' width='20' alt=''/><br/>LICENSE at root or one level deep<br/>→ copied per platform")
+    Lic --> Swap("<img src='barnacle:folder.svg' width='20' alt=''/><br/>swap: mv staging → vTAG<br/>then delete superseded v* folders")
+    Swap --> Smoke("<img src='barnacle:check.svg' width='20' alt=''/><br/>smoke: barnacle --version<br/>warn only on mismatch")
+    class Tag tagNode
+    class DL dlNode
+    class Sum,Smoke checkNode
+    class Ext boxNode
+    class Swap folder
+    classDef tagNode fill:#f6b8d4,stroke:#be185d,color:#500724
+    classDef dlNode fill:#93e2e2,stroke:#0f766e,color:#042f2e
+    classDef checkNode fill:#9fe8c9,stroke:#0f766e,color:#052e22
+    classDef boxNode fill:#e8cf9d,stroke:#a16207,color:#33240a
+    classDef folder fill:#f0c558,stroke:#8a6d1c,color:#332a05
 ```
 
 [Barnacle](https://github.com/fordaj/barnacle) is a documentation-site generator: it renders the `.md` and `.mmd` files scattered through a repository into a static, navigable HTML site. mirror-clone uses it to render *this* documentation; the site you may be reading was built by it.

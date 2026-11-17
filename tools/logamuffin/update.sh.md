@@ -2,15 +2,25 @@
 
 ```mermaid
 flowchart TD
-    Args["update.sh [--dry-run · --tag TAG]"] --> Tag["resolve tag<br/>latest release or --tag · validated"]
-    Tag --> DL["gh release download<br/>ASSET_&lt;os&gt;-&lt;arch&gt;.7z + checksums.txt"]
-    Args --> Need["needs 7z/7zz — the vendored<br/>tools/7zip bundle works"]
-    DL --> Sum["verify checksums.txt<br/>mismatch → fatal · absent → warn"]
-    Sum --> Map["stem → platform<br/>macos/linux/windows × x86_64/arm64"]
-    Map --> Ext["7z extract → vTAG/PLATFORM"]
-    Ext --> Swap["swap: mv staging → vTAG<br/>then delete superseded v* folders"]
-    Swap --> Smoke["smoke: logamuffin --version"]
+    Args("<img src='barnacle:keyboard.svg' width='20' alt=''/><br/>update.sh [--dry-run · --tag TAG]") --> Tag("<img src='barnacle:tag.svg' width='20' alt=''/><br/>resolve tag<br/>latest release or --tag · validated")
+    Tag --> DL("<img src='barnacle:download.svg' width='20' alt=''/><br/>gh release download<br/>ASSET_&lt;os&gt;-&lt;arch&gt;.7z + checksums.txt")
+    Args --> Need("<img src='barnacle:package.svg' width='20' alt=''/><br/><u>needs 7z/7zz — the vendored<br/>tools/7zip bundle works</u>")
+    DL --> Sum("<img src='barnacle:check.svg' width='20' alt=''/><br/>verify checksums.txt<br/>mismatch → fatal · absent → warn")
+    Sum --> Map("<img src='barnacle:funnel.svg' width='20' alt=''/><br/>stem → platform<br/>macos/linux/windows × x86_64/arm64")
+    Map --> Ext("<img src='barnacle:package.svg' width='20' alt=''/><br/>7z extract → vTAG/PLATFORM")
+    Ext --> Swap("<img src='barnacle:folder.svg' width='20' alt=''/><br/>swap: mv staging → vTAG<br/>then delete superseded v* folders")
+    Swap --> Smoke("<img src='barnacle:check.svg' width='20' alt=''/><br/>smoke: logamuffin --version")
     click Need href "../7zip/update.sh.md"
+    class Tag tagNode
+    class DL dlNode
+    class Need,Ext boxNode
+    class Sum,Smoke checkNode
+    class Swap folder
+    classDef tagNode fill:#f6b8d4,stroke:#be185d,color:#500724
+    classDef dlNode fill:#93e2e2,stroke:#0f766e,color:#042f2e
+    classDef boxNode fill:#e8cf9d,stroke:#a16207,color:#33240a
+    classDef checkNode fill:#9fe8c9,stroke:#0f766e,color:#052e22
+    classDef folder fill:#f0c558,stroke:#8a6d1c,color:#332a05
 ```
 
 [logamuffin](https://github.com/fordaj/logamuffin) is the structured logging backend used by the repository's scripts: [scripts/entry.sh](../../scripts/entry.sh.md) forwards `log LEVEL MESSAGE...` to `LOGAMUFFIN_BIN`, passing the call site in `LOG_SOURCE`.

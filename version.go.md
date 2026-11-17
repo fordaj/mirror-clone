@@ -2,14 +2,16 @@
 
 ```mermaid
 flowchart LR
-    LD["build-time -ldflags<br/>version · commit · date · mode"] --> Ver["package-level vars<br/>version=dev · commit=none · …"]
-    Ver --> Fmt["versionString()<br/>for --version"]
-    Ver --> Cmp["compareVersions(a, b)<br/>-1 older · 0 equal · 1 newer<br/>leading v ignored · numeric parts"]
-    Cmp --> Rel["releaseVersion<br/>tag without the leading v"]
-    Cmp --> Upd["update — is newer available?"]
-    Cmp --> Sel["release selection"]
+    LD("<img src='barnacle:hammer.svg' width='20' alt=''/><br/>build-time -ldflags<br/>version · commit · date · mode") --> Ver("<img src='barnacle:file-code.svg' width='20' alt=''/><br/>package-level vars<br/>version=dev · commit=none · …")
+    Ver --> Fmt("<img src='barnacle:info.svg' width='20' alt=''/><br/>versionString()<br/>for --version")
+    Ver --> Cmp("<img src='barnacle:git-compare.svg' width='20' alt=''/><br/>compareVersions(a, b)<br/>-1 older · 0 equal · 1 newer<br/>leading v ignored · numeric parts")
+    Cmp --> Rel("<img src='barnacle:tag.svg' width='20' alt=''/><br/>releaseVersion<br/>tag without the leading v")
+    Cmp --> Upd("<img src='barnacle:refresh-cw.svg' width='20' alt=''/><br/><u>update — is newer available?</u>")
+    Cmp --> Sel("<img src='barnacle:list-filter.svg' width='20' alt=''/><br/><u>release selection</u>")
     click Upd href "update.go.md"
     click Sel href "release.go.md"
+    class Rel tagNode
+    classDef tagNode fill:#f6b8d4,stroke:#be185d,color:#500724
 ```
 
 `version.go` holds the build-time version of the binary and the version comparison used by the self update.
