@@ -2,13 +2,15 @@
 
 ```mermaid
 flowchart LR
-    Argv["os.Args[1:]"] --> Parse["parseArgs"]
-    Parse -->|"ok"| Opts["Options<br/>Command · Repository · Directory<br/>Branch · Jobs · LogLevel"]
-    Parse -->|"error"| Err["usage error · exit 2"]
-    Opts --> Run["run — apply flags, dispatch"]
-    Opts -.-> Usage["usageText — the help surface"]
+    Argv("<img src='barnacle:keyboard.svg' width='20' alt=''/><br/>os.Args[1:]") --> Parse("<img src='barnacle:file-code.svg' width='20' alt=''/><br/>parseArgs")
+    Parse -->|"ok"| Opts("<img src='barnacle:sliders-horizontal.svg' width='20' alt=''/><br/>Options<br/>Command · Repository · Directory<br/>Branch · Jobs · LogLevel")
+    Parse -->|"error"| Err("<img src='barnacle:circle-exclamation-point.svg' width='20' alt=''/><br/>usage error · exit 2")
+    Opts --> Run("<img src='barnacle:play.svg' width='20' alt=''/><br/><u>run — apply flags, dispatch</u>")
+    Opts -.-> Usage("<img src='barnacle:info.svg' width='20' alt=''/><br/><u>usageText — the help surface</u>")
     click Run href "main.go.md"
     click Usage href "main.go.md"
+    class Err errNode
+    classDef errNode fill:#f6b8b8,stroke:#b91c1c,color:#450a0a
 ```
 
 `cli.go` defines the command line surface of the tool: the `Options` struct, the self management `Command` constants, the `usageText` help text, and `parseArgs`.

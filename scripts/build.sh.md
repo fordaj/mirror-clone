@@ -2,14 +2,18 @@
 
 ```mermaid
 flowchart LR
-    Args["--all · --platform PLATFORM (repeatable)<br/>default: host · DEBUG=true / --debug<br/>OUTPUT_DIR · PLATFORMS"] --> Map["go_target<br/>linux · macos · windows<br/>× x86_64 · arm64 · CGO_ENABLED=0"]
-    Args --> Host["detect_host_platform"]
+    Args("<img src='barnacle:keyboard.svg' width='20' alt=''/><br/>--all · --platform PLATFORM (repeatable)<br/>default: host · DEBUG=true / --debug<br/>OUTPUT_DIR · PLATFORMS") --> Map("<img src='barnacle:layers.svg' width='20' alt=''/><br/>go_target<br/>linux · macos · windows<br/>× x86_64 · arm64 · CGO_ENABLED=0")
+    Args --> Host("<img src='barnacle:monitor.svg' width='20' alt=''/><br/>detect_host_platform")
     Host --> Map
-    Map --> Ld["-ldflags -X main.version=… commit=…<br/>date=… mode=…<br/>(+ -s -w -trimpath for release)"]
-    Ver["version.sh.md<br/>pinned versioner"] --> Ld
-    Ld --> Out["dist/…/mirror-clone[.exe]<br/>debug builds under dist/debug/…"]
+    Map --> Ld("<img src='barnacle:hammer.svg' width='20' alt=''/><br/>-ldflags -X main.version=… commit=…<br/>date=… mode=…<br/>(+ -s -w -trimpath for release)")
+    Ver("<img src='barnacle:file-text.svg' width='20' alt=''/><br/><u>version.sh.md<br/>pinned versioner</u>") --> Ld
+    Ld --> Out("<img src='barnacle:file-code.svg' width='20' alt=''/><br/><u>dist/…/mirror-clone[.exe]<br/>debug builds under dist/debug/…</u>")
     click Ver href "version.sh.md"
     click Out href "run.sh.md"
+    class Ver mdFile
+    class Out goFile
+    classDef mdFile fill:#dcd6ce,stroke:#6b6255,color:#292524
+    classDef goFile fill:#8fd8ef,stroke:#0277a8,color:#08303d
 ```
 
 `scripts/build.sh` cross compiles the mirror-clone binary for the supported platforms. Release builds are the default (stripped, optimized, version stamped); debug builds keep the compiler's symbols and debug information.

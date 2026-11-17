@@ -2,13 +2,17 @@
 
 ```mermaid
 flowchart LR
-    Caller["MirrorCloner"] --> Run["Git.Run / Git.RunIn"]
-    Run --> Env["non-interactive env<br/>GIT_TERMINAL_PROMPT=0<br/>GIT_PAGER=cat · GIT_OPTIONAL_LOCKS=0"]
-    Env --> Git["git -C DIR ARGS…<br/>(cwd never changes)"]
-    Git --> Result{"exit code"}
-    Result -->|"0"| Out["trimmed stdout"]
-    Result -->|"non-zero"| Err["*GitError<br/>Args · Output · Err"]
+    Caller("<img src='barnacle:file-code.svg' width='20' alt=''/><br/><u>MirrorCloner</u>") --> Run("<img src='barnacle:file-code.svg' width='20' alt=''/><br/>Git.Run / Git.RunIn")
+    Run --> Env("<img src='barnacle:square-terminal.svg' width='20' alt=''/><br/>non-interactive env<br/>GIT_TERMINAL_PROMPT=0<br/>GIT_PAGER=cat · GIT_OPTIONAL_LOCKS=0")
+    Env --> Git("<img src='barnacle:terminal.svg' width='20' alt=''/><br/>git -C DIR ARGS…<br/>(cwd never changes)")
+    Git --> Result{{"<img src='barnacle:hexagon.svg' width='20' alt=''/><br/>exit code"}}
+    Result -->|"0"| Out("<img src='barnacle:file-text.svg' width='20' alt=''/><br/>trimmed stdout")
+    Result -->|"non-zero"| Err("<img src='barnacle:circle-exclamation-point.svg' width='20' alt=''/><br/>*GitError<br/>Args · Output · Err")
     click Caller href "mirror.go.md"
+    class Result hexNode
+    class Err errNode
+    classDef hexNode fill:#ffe08a,stroke:#a16207,color:#422006
+    classDef errNode fill:#f6b8b8,stroke:#b91c1c,color:#450a0a
 ```
 
 `git.go` wraps every `git` invocation of the tool. Nothing in the repository shells out to git directly; everything goes through `Git`.

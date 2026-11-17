@@ -2,17 +2,21 @@
 
 ```mermaid
 flowchart TD
-    Start["run(args)"] --> Parse["parseArgs"]
-    Parse -->|"error"| E2["usage error + hint<br/>exit 2"]
-    Parse -->|"--help"| H["usageText<br/>exit 0"]
-    Parse -->|"--version"| V["versionString<br/>exit 0"]
-    Parse --> Build["logger + signal-aware context"]
-    Build --> Dispatch{"command"}
-    Dispatch -->|"<a href='install.go.md'>install / uninstall</a>"| Inst["install / uninstall"]
-    Dispatch -->|"<a href='update.go.md'>update</a>"| Upd["update"]
-    Dispatch -->|"<a href='mirror.go.md'>(default) clone</a>"| Clone["MirrorCloner"]
-    Clone --> Exit["exit 0 · 1 · 130"]
+    Start("<img src='barnacle:play.svg' width='20' alt=''/><br/>run(args)") --> Parse("<img src='barnacle:file-code.svg' width='20' alt=''/><br/><u>parseArgs</u>")
+    Parse -->|"error"| E2("<img src='barnacle:circle-exclamation-point.svg' width='20' alt=''/><br/>usage error + hint<br/>exit 2")
+    Parse -->|"--help"| H("<img src='barnacle:info.svg' width='20' alt=''/><br/>usageText<br/>exit 0")
+    Parse -->|"--version"| V("<img src='barnacle:info.svg' width='20' alt=''/><br/>versionString<br/>exit 0")
+    Parse --> Build("<img src='barnacle:cog.svg' width='20' alt=''/><br/>logger + signal-aware context")
+    Build --> Dispatch{{"<img src='barnacle:hexagon.svg' width='20' alt=''/><br/>command"}}
+    Dispatch -->|"<a href='install.go.md'>install / uninstall</a>"| Inst("<img src='barnacle:download.svg' width='20' alt=''/><br/>install / uninstall")
+    Dispatch -->|"<a href='update.go.md'>update</a>"| Upd("<img src='barnacle:refresh-cw.svg' width='20' alt=''/><br/>update")
+    Dispatch -->|"<a href='mirror.go.md'>(default) clone</a>"| Clone("<img src='barnacle:file-code.svg' width='20' alt=''/><br/>MirrorCloner")
+    Clone --> Exit("<img src='barnacle:flag.svg' width='20' alt=''/><br/>exit 0 · 1 · 130")
     click Parse href "cli.go.md"
+    class E2 errNode
+    class Dispatch hexNode
+    classDef errNode fill:#f6b8b8,stroke:#b91c1c,color:#450a0a
+    classDef hexNode fill:#ffe08a,stroke:#a16207,color:#422006
 ```
 
 `main.go` is the program entry point. It keeps `main()` trivial and puts the whole program logic in `run(args []string) int`, which returns the process exit code; `main` only does `os.Exit(run(os.Args[1:]))`.

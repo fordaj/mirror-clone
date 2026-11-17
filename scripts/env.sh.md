@@ -2,16 +2,20 @@
 
 ```mermaid
 flowchart TD
-    Src["sourced by entry.sh.md<br/>(never executed directly)"] --> Loc["locate the cascade via BASH_SOURCE<br/>works from any cwd"]
-    Loc --> Common[".common.env<br/>TOOLS_DIR · upstream repos · pinned *_VERSION_DIR"]
-    Loc --> Plat[".linux-arm64.env, …<br/>PROJECT_PLATFORM · BINs"]
-    Common --> Resolve["resolve_version_dir<br/>newest bundled v* wins over the pin"]
+    Src("<img src='barnacle:file-text.svg' width='20' alt=''/><br/><u>sourced by entry.sh.md<br/>(never executed directly)</u>") --> Loc("<img src='barnacle:terminal.svg' width='20' alt=''/><br/>locate the cascade via BASH_SOURCE<br/>works from any cwd")
+    Loc --> Common("<img src='barnacle:terminal.svg' width='20' alt=''/><br/>.common.env<br/>TOOLS_DIR · upstream repos · pinned *_VERSION_DIR")
+    Loc --> Plat("<img src='barnacle:terminal.svg' width='20' alt=''/><br/>.linux-arm64.env, …<br/>PROJECT_PLATFORM · BINs")
+    Common --> Resolve("<img src='barnacle:terminal.svg' width='20' alt=''/><br/>resolve_version_dir<br/>newest bundled v* wins over the pin")
     Plat --> Resolve
-    Resolve --> Abs["absolutize_bin against REPO_ROOT_DIR"]
-    Abs --> Fallback["fallback_to_path when the bundled binary is missing"]
-    Fallback --> Bins["VERSIONER_BIN · LOGAMUFFIN_BIN · RUNNER_SPAWNER_BIN<br/>BARNACLE_BIN · SEVENZZ_BIN"]
+    Resolve --> Abs("<img src='barnacle:terminal.svg' width='20' alt=''/><br/>absolutize_bin against REPO_ROOT_DIR")
+    Abs --> Fallback("<img src='barnacle:corner-down-right.svg' width='20' alt=''/><br/>fallback_to_path when the bundled binary is missing")
+    Fallback --> Bins("<img src='barnacle:list.svg' width='20' alt=''/><br/><u>VERSIONER_BIN · LOGAMUFFIN_BIN · RUNNER_SPAWNER_BIN<br/>BARNACLE_BIN · SEVENZZ_BIN</u>")
     click Src href "entry.sh.md"
     click Bins href "docs.sh.md"
+    class Src mdFile
+    class Common,Plat shFile
+    classDef mdFile fill:#dcd6ce,stroke:#6b6255,color:#292524
+    classDef shFile fill:#abe07a,stroke:#3f6212,color:#16280a
 ```
 
 `scripts/env.sh` is the plumbing that makes the pinned helper tools resolvable from any script, in any working directory, on every supported platform. It is sourced — never executed.
@@ -34,7 +38,7 @@ Everything is exported with `set -a` while sourcing and un-exported at the end (
 
 Hidden files are excluded from barnacle's default scan, so their contract is documented here:
 
-- **`.common.env`** — `TOOLS_DIR=tools`; the upstream `fordaj/*` repository slugs and patterns (`VERSIONER_REPO=fordaj/Versioner`, `VERSIONER_TAG_PATTERN=v[0-9]*`, `VERSIONER_CONFIG_FILE=.versioner.json`, `LOGAMUFFIN_REPO=fordaj/logamuffin`, `RUNNER_SPAWNER_TOOL_REPO=fordaj/runner-spawner`, `BARNACLE_REPO=fordaj/barnacle`); and the pinned `*_VERSION_DIR`s: **VERSIONER `v0.0.3.0.17`, LOGAMUFFIN `v0.1.3.0.35`, RUNNER_SPAWNER `v0.0.1.2.16` (fallback only), BARNACLE `v0.0.1.0.17`**, plus `SEVENZIP_VERSION_DIR=tools/7zip/v26.06`. "Fallback only" for runner-spawner means no script in this repository invokes it — the pin exists so the cascade resolves it uniformly (it falls back to `runner-spawner` on `PATH` like the other tools), and `resolve_version_dir` prefers whatever newer `v*` directory is checked out anyway; it reports unsupported on Linux (macOS + Windows only, the binary is still shipped for a uniform bundle layout — see the Linux platform files and `tools/runner-spawner/update.sh.md`). When bumping a pinned tool, this file names the version directory the platform files point into.
+- **`.common.env`** — `TOOLS_DIR=tools`; the upstream `fordaj/*` repository slugs and patterns (`VERSIONER_REPO=fordaj/Versioner`, `VERSIONER_TAG_PATTERN=v[0-9]*`, `VERSIONER_CONFIG_FILE=.versioner.json`, `LOGAMUFFIN_REPO=fordaj/logamuffin`, `RUNNER_SPAWNER_TOOL_REPO=fordaj/runner-spawner`, `BARNACLE_REPO=fordaj/barnacle`); and the pinned `*_VERSION_DIR`s: **VERSIONER `v0.0.3.0.17`, LOGAMUFFIN `v0.1.3.0.35`, RUNNER_SPAWNER `v0.0.1.2.16` (fallback only), BARNACLE `v0.0.2.1.25`**, plus `SEVENZIP_VERSION_DIR=tools/7zip/v26.06`. "Fallback only" for runner-spawner means no script in this repository invokes it — the pin exists so the cascade resolves it uniformly (it falls back to `runner-spawner` on `PATH` like the other tools), and `resolve_version_dir` prefers whatever newer `v*` directory is checked out anyway; it reports unsupported on Linux (macOS + Windows only, the binary is still shipped for a uniform bundle layout — see the Linux platform files and `tools/runner-spawner/update.sh.md`). When bumping a pinned tool, this file names the version directory the platform files point into.
 - **`.<platform>.env`** — one per supported platform (`linux-arm64`, `linux-x86_64`, `macos-arm64`, `macos-x86_64`, `windows-arm64`, `windows-x86_64`). Sets `PROJECT_PLATFORM` and the `*_BIN` paths. The notes about runner-spawner being unsupported on Linux (macOS + Windows only; the binary is still shipped for a uniform bundle layout) and about the missing windows-arm64 versioner bundle are recorded in the platform files themselves.
 
 ## Related pages

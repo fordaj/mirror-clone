@@ -2,14 +2,14 @@
 
 ```mermaid
 flowchart LR
-    Env["env.sh.md<br/>environment cascade<br/>dotfile cascade loader"] --> Entry["entry.sh.md<br/>sources the cascade + defines log()"]
-    Entry --> Build["build.sh.md"]
-    Entry --> Release["release.sh.md"]
-    Entry --> Test["test.sh.md"]
-    Entry --> Docs["docs.sh.md"]
-    Entry --> Run["run.sh.md"]
-    Entry --> Format["format.sh.md"]
-    Entry --> Version["version.sh.md"]
+    Env("<img src='barnacle:file-text.svg' width='20' alt=''/><br/><u>env.sh.md<br/>environment cascade<br/>dotfile cascade loader</u>") --> Entry("<img src='barnacle:file-text.svg' width='20' alt=''/><br/><u>entry.sh.md<br/>sources the cascade + defines log()</u>")
+    Entry --> Build("<img src='barnacle:file-text.svg' width='20' alt=''/><br/><u>build.sh.md</u>")
+    Entry --> Release("<img src='barnacle:file-text.svg' width='20' alt=''/><br/><u>release.sh.md</u>")
+    Entry --> Test("<img src='barnacle:file-text.svg' width='20' alt=''/><br/><u>test.sh.md</u>")
+    Entry --> Docs("<img src='barnacle:file-text.svg' width='20' alt=''/><br/><u>docs.sh.md</u>")
+    Entry --> Run("<img src='barnacle:file-text.svg' width='20' alt=''/><br/><u>run.sh.md</u>")
+    Entry --> Format("<img src='barnacle:file-text.svg' width='20' alt=''/><br/><u>format.sh.md</u>")
+    Entry --> Version("<img src='barnacle:file-text.svg' width='20' alt=''/><br/><u>version.sh.md</u>")
     click Env href "env.sh.md"
     click Entry href "entry.sh.md"
     click Build href "build.sh.md"
@@ -19,6 +19,8 @@ flowchart LR
     click Run href "run.sh.md"
     click Format href "format.sh.md"
     click Version href "version.sh.md"
+    class Env,Entry,Build,Release,Test,Docs,Run,Format,Version mdFile
+    classDef mdFile fill:#dcd6ce,stroke:#6b6255,color:#292524
 ```
 
 The `scripts/` directory carries the repository's build/release/docs tooling: an environment cascade the other scripts source, plus one entry point per task. Everything here is bash; nothing requires a global install beyond what each script documents.

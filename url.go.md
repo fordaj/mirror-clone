@@ -2,17 +2,17 @@
 
 ```mermaid
 flowchart LR
-    HTTPS["https://host/org/repo.git"]
-    SCP["git@host:org/repo.git"]
-    Local["/srv/git/repo.git"]
-    HTTPS --> Name["repoNameFromURL<br/>last segment · drop .git/.bundle"]
+    HTTPS("<img src='barnacle:globe.svg' width='20' alt=''/><br/>https://host/org/repo.git")
+    SCP("<img src='barnacle:globe.svg' width='20' alt=''/><br/>git@host:org/repo.git")
+    Local("<img src='barnacle:hard-drive.svg' width='20' alt=''/><br/>/srv/git/repo.git")
+    HTTPS --> Name("<img src='barnacle:file-code.svg' width='20' alt=''/><br/>repoNameFromURL<br/>last segment · drop .git/.bundle")
     SCP --> Name
     Local --> Name
-    Name --> San["sanitizeName<br/>[a-zA-Z0-9._-] only · else repo"]
-    Name --> Hash["shortHash — name disambiguation"]
-    Rel["../lib.git"] --> Res["resolveSubmoduleURL<br/>relative resolved against superproject"]
-    Base["https://host/org/proj.git"] --> Res
-    Res --> Out["https://host/org/lib.git"]
+    Name --> San("<img src='barnacle:file-code.svg' width='20' alt=''/><br/><u>sanitizeName<br/>[a-zA-Z0-9._-] only · else repo</u>")
+    Name --> Hash("<img src='barnacle:hash.svg' width='20' alt=''/><br/><u>shortHash — name disambiguation</u>")
+    Rel("<img src='barnacle:globe.svg' width='20' alt=''/><br/>../lib.git") --> Res("<img src='barnacle:git-fork.svg' width='20' alt=''/><br/><u>resolveSubmoduleURL<br/>relative resolved against superproject</u>")
+    Base("<img src='barnacle:globe.svg' width='20' alt=''/><br/>https://host/org/proj.git") --> Res
+    Res --> Out("<img src='barnacle:globe.svg' width='20' alt=''/><br/>https://host/org/lib.git")
     click San href "mirror.go.md"
     click Hash href "mirror.go.md"
     click Res href "mirror.go.md"

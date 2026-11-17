@@ -2,15 +2,19 @@
 
 ```mermaid
 flowchart TD
-    Req["CloneRequest<br/>Name · URL · Dest · Ref"] --> Val["validate URL + dest"]
-    Val --> Ensure["ensureMirror<br/>git clone --mirror · or fetch --prune<br/>cache: &lt;cache&gt;/&lt;name&gt;.git<br/>name clash → &lt;name&gt;-&lt;shorthash&gt;.git"]
-    Ensure --> From["cloneFromMirror<br/>git clone --reference --dissociate<br/>existing dest: fetch --prune + ff-only<br/>(never discards local changes)"]
-    From --> Checkout["checkout Ref<br/>fallback: fetch mirror refs → refs/remotes/mirror/* and retry"]
-    Checkout -->|"<a href='url.go.md'>relative URLs vs superproject</a>"| Subs["cloneSubmodules<br/>parallel, recursive, bounded by --jobs"]
-    Subs --> Done["working copy ready"]
+    Req("<img src='barnacle:file-code.svg' width='20' alt=''/><br/>CloneRequest<br/>Name · URL · Dest · Ref") --> Val("<img src='barnacle:check.svg' width='20' alt=''/><br/>validate URL + dest")
+    Val --> Ensure("<img src='barnacle:download.svg' width='20' alt=''/><br/><u>ensureMirror<br/>git clone --mirror · or fetch --prune<br/>cache: &lt;cache&gt;/&lt;name&gt;.git<br/>name clash → &lt;name&gt;-&lt;shorthash&gt;.git</u>")
+    Ensure --> From("<img src='barnacle:download.svg' width='20' alt=''/><br/><u>cloneFromMirror<br/>git clone --reference --dissociate<br/>existing dest: fetch --prune + ff-only<br/>(never discards local changes)</u>")
+    From --> Checkout("<img src='barnacle:git-branch.svg' width='20' alt=''/><br/><u>checkout Ref<br/>fallback: fetch mirror refs → refs/remotes/mirror/* and retry</u>")
+    Checkout -->|"<a href='url.go.md'>relative URLs vs superproject</a>"| Subs("<img src='barnacle:git-fork.svg' width='20' alt=''/><br/>cloneSubmodules<br/>parallel, recursive, bounded by --jobs")
+    Subs --> Done("<img src='barnacle:check.svg' width='20' alt=''/><br/>working copy ready")
     click Ensure href "git.go.md"
     click From href "git.go.md"
     click Checkout href "git.go.md"
+    class Val,Done checkNode
+    class Ensure,From dlNode
+    classDef checkNode fill:#9fe8c9,stroke:#0f766e,color:#052e22
+    classDef dlNode fill:#93e2e2,stroke:#0f766e,color:#042f2e
 ```
 
 `mirror.go` implements the core of the tool: cloning through a local mirror cache, including recursive submodule cloning.

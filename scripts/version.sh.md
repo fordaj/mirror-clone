@@ -2,16 +2,23 @@
 
 ```mermaid
 flowchart LR
-    Args["version.sh [--format text|shell|json|version|tag]"] --> Bin["VERSIONER_BIN<br/>cascade-resolved · fallback on PATH"]
-    Bin --> Run["versioner --repo-dir ROOT --quiet<br/>version from git history + .versioner.json"]
-    Run --> Out{"--format"}
-    Out -->|"text"| T["VERSION= / TAG= lines<br/>(default)"]
-    Out -->|"shell"| Sh["export VERSION=… TAG=…<br/>for eval"]
-    Out -->|"json"| J["raw versioner JSON"]
-    Out -->|"version / tag"| V["only the value<br/>(build.sh · release.sh)"]
-    T --> Consumers["build.sh · release.sh"]
+    Args("<img src='barnacle:keyboard.svg' width='20' alt=''/><br/>version.sh [--format text|shell|json|version|tag]") --> Bin("<img src='barnacle:square-terminal.svg' width='20' alt=''/><br/><u>VERSIONER_BIN<br/>cascade-resolved · fallback on PATH</u>")
+    Bin --> Run("<img src='barnacle:git-commit-horizontal.svg' width='20' alt=''/><br/>versioner --repo-dir ROOT --quiet<br/>version from git history + .versioner.json")
+    Run --> Out{{"<img src='barnacle:hexagon.svg' width='20' alt=''/><br/>--format"}}
+    Out -->|"text"| T("<img src='barnacle:file-text.svg' width='20' alt=''/><br/>VERSION= / TAG= lines<br/>(default)")
+    Out -->|"shell"| Sh("<img src='barnacle:terminal.svg' width='20' alt=''/><br/>export VERSION=… TAG=…<br/>for eval")
+    Out -->|"json"| J("<img src='barnacle:braces.svg' width='20' alt=''/><br/>raw versioner JSON")
+    Out -->|"version / tag"| V("<img src='barnacle:hash.svg' width='20' alt=''/><br/>only the value<br/>(build.sh · release.sh)")
+    T --> Consumers("<img src='barnacle:terminal.svg' width='20' alt=''/><br/><u>build.sh · release.sh</u>")
     click Bin href "env.sh.md"
     click Consumers href "release.sh.md"
+    class Out hexNode
+    class Sh shFile
+    class J jsonFile
+    class Consumers shFile
+    classDef hexNode fill:#ffe08a,stroke:#a16207,color:#422006
+    classDef shFile fill:#abe07a,stroke:#3f6212,color:#16280a
+    classDef jsonFile fill:#cdb9f7,stroke:#6d28d9,color:#2e1065
 ```
 
 Prints the version of this repository as computed by the pinned `tools/versioner/update.sh.md` — the same computation the release pipeline uses, so a local build and the published tag can never drift apart.

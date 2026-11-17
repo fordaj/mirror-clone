@@ -2,11 +2,15 @@
 
 ```mermaid
 flowchart LR
-    Args["docs.sh [--site … · --config …]"] --> Entry["entry.sh.md<br/>cascade + log()"]
-    Entry -->|"<a href='env.sh.md'>BARNACLE_BIN — cascade</a>"| Bin["BARNACLE_BIN<br/>pinned bundle → PATH fallback"]
-    Bin --> Barnacle["barnacle<br/>scans .md / .mmd in the tree"]
-    Barnacle --> Out["./site — static HTML<br/>git-ignored · wiped and rebuilt"]
+    Args("<img src='barnacle:keyboard.svg' width='20' alt=''/><br/>docs.sh [--site … · --config …]") --> Entry("<img src='barnacle:file-text.svg' width='20' alt=''/><br/><u>entry.sh.md<br/>cascade + log()</u>")
+    Entry -->|"<a href='env.sh.md'>BARNACLE_BIN — cascade</a>"| Bin("<img src='barnacle:square-terminal.svg' width='20' alt=''/><br/>BARNACLE_BIN<br/>pinned bundle → PATH fallback")
+    Bin --> Barnacle("<img src='barnacle:book-open.svg' width='20' alt=''/><br/>barnacle<br/>scans .md / .mmd in the tree")
+    Barnacle --> Out("<img src='barnacle:folder.svg' width='20' alt=''/><br/>./site — static HTML<br/>git-ignored · wiped and rebuilt")
     click Entry href "entry.sh.md"
+    class Entry mdFile
+    class Out folder
+    classDef mdFile fill:#dcd6ce,stroke:#6b6255,color:#292524
+    classDef folder fill:#f0c558,stroke:#8a6d1c,color:#332a05
 ```
 
 Generates the documentation site you are reading: it runs the pinned `tools/barnacle/update.sh.md` binary against this repository.

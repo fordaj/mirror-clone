@@ -2,15 +2,25 @@
 
 ```mermaid
 flowchart LR
-    Args["format.sh [--check · --dry-run · --tool TOOL · --parallel]"] --> Uv["uv run --project … formattington"]
-    Cfg[".formattington.json<br/>the formatter table"] --> Uv
-    Uv --> P["prettier — Markdown, JSON"]
-    Uv --> S["shfmt -i 4 — shell"]
-    Uv --> T["taplo — TOML"]
-    Uv --> G["gofmt + goimports — Go<br/>serial by default (they race otherwise)"]
-    Uv --> Chk{"--check?"}
-    Chk -->|"yes"| Fail["exit 1 when anything needs formatting"]
-    Chk -->|"no"| Write["format in place · exit 0"]
+    Args("<img src='barnacle:keyboard.svg' width='20' alt=''/><br/>format.sh [--check · --dry-run · --tool TOOL · --parallel]") --> Uv("<img src='barnacle:wand.svg' width='20' alt=''/><br/>uv run --project … formattington")
+    Cfg("<img src='barnacle:braces.svg' width='20' alt=''/><br/>.formattington.json<br/>the formatter table") --> Uv
+    Uv --> P("<img src='barnacle:paintbrush.svg' width='20' alt=''/><br/>prettier — Markdown, JSON")
+    Uv --> S("<img src='barnacle:terminal.svg' width='20' alt=''/><br/>shfmt -i 4 — shell")
+    Uv --> T("<img src='barnacle:file-text.svg' width='20' alt=''/><br/>taplo — TOML")
+    Uv --> G("<img src='barnacle:file-code.svg' width='20' alt=''/><br/>gofmt + goimports — Go<br/>serial by default (they race otherwise)")
+    Uv --> Chk{{"<img src='barnacle:hexagon.svg' width='20' alt=''/><br/>--check?"}}
+    Chk -->|"yes"| Fail("<img src='barnacle:circle-exclamation-point.svg' width='20' alt=''/><br/>exit 1 when anything needs formatting")
+    Chk -->|"no"| Write("<img src='barnacle:paintbrush.svg' width='20' alt=''/><br/>format in place · exit 0")
+    class Cfg jsonFile
+    class S shFile
+    class G goFile
+    class Chk hexNode
+    class Fail errNode
+    classDef jsonFile fill:#cdb9f7,stroke:#6d28d9,color:#2e1065
+    classDef shFile fill:#abe07a,stroke:#3f6212,color:#16280a
+    classDef goFile fill:#8fd8ef,stroke:#0277a8,color:#08303d
+    classDef hexNode fill:#ffe08a,stroke:#a16207,color:#422006
+    classDef errNode fill:#f6b8b8,stroke:#b91c1c,color:#450a0a
 ```
 
 `scripts/format.sh` formats the sources of the repository with [formattington](https://github.com/fordaj/formattington), driven by the configuration in `.formattington.json`: `prettier` (Markdown, JSON), `shfmt -i 4` (shell), `taplo` (TOML), `gofmt` and `goimports` (Go).

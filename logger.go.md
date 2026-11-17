@@ -2,12 +2,12 @@
 
 ```mermaid
 flowchart LR
-    Argv["--log-level · -q/--quiet"] --> Parse["ParseLevel<br/>error · warn · info · debug<br/>unknown → LevelInfo"]
-    Parse --> Min["min level"]
-    Min --> Logger["Logger — NewLogger(out, err, min)"]
-    Logger --> Out["Infof / Debugf → stdout<br/>(prefixed)"]
-    Logger --> Err["Warnf / Errorf → stderr<br/>(prefixed)"]
-    Logger --> Drop["below min → discarded"]
+    Argv("<img src='barnacle:keyboard.svg' width='20' alt=''/><br/><u>--log-level · -q/--quiet</u>") --> Parse("<img src='barnacle:file-code.svg' width='20' alt=''/><br/>ParseLevel<br/>error · warn · info · debug<br/>unknown → LevelInfo")
+    Parse --> Min("<img src='barnacle:sliders-horizontal.svg' width='20' alt=''/><br/>min level")
+    Min --> Logger("<img src='barnacle:file-code.svg' width='20' alt=''/><br/>Logger — NewLogger(out, err, min)")
+    Logger --> Out("<img src='barnacle:terminal.svg' width='20' alt=''/><br/>Infof / Debugf → stdout<br/>(prefixed)")
+    Logger --> Err("<img src='barnacle:triangle-exclamation-point.svg' width='20' alt=''/><br/>Warnf / Errorf → stderr<br/>(prefixed)")
+    Logger --> Drop("<img src='barnacle:trash.svg' width='20' alt=''/><br/>below min → discarded")
     click Argv href "cli.go.md"
 ```
 
