@@ -18,7 +18,7 @@ flowchart TD
 ```text
 tools/barnacle/
   update.sh                     # refresh from fordaj/barnacle releases
-  v0.0.1.0.17/
+  v0.0.2.1.25/
     macos-arm64/barnacle
     macos-arm64/LICENSE           # upstream MIT text, copied per platform
     macos-x86_64/barnacle
@@ -43,7 +43,7 @@ Adapted to barnacle's release format: assets are `barnacle-<platform>.tar.gz` (m
 4. Swaps in the new version directory and deletes superseded `v*` folders only after the new one is fully staged — a failed download leaves the previous bundle intact.
 5. Smoke-tests the host binary (`barnacle --version`); a version that does not contain the tag only warns.
 
-Licenses: MIT — see `v0.0.1.0.17/<platform>/LICENSE`. Environment overrides: `BARNACLE_REPO`, `BARNACLE_TAG`. `--dry-run` lists assets and planned removals without touching anything; `--help` shows usage. Prerequisites: `gh` and `tar` (plus `unzip`, or `7z`/`7zz` for legacy `.7z` assets). `update.sh` resolves its own directory, so it can run from anywhere.
+Licenses: MIT — see `v0.0.2.1.25/<platform>/LICENSE`. Environment overrides: `BARNACLE_REPO`, `BARNACLE_TAG`. `--dry-run` lists assets and planned removals without touching anything; `--help` shows usage. Prerequisites: `gh` and `tar` (plus `unzip`, or `7z`/`7zz` for legacy `.7z` assets). `update.sh` resolves its own directory, so it can run from anywhere.
 
 ## How the repository uses it
 
